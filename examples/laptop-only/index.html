@@ -2,127 +2,166 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<!-- phonefix demo: deliberately laptop-only. No viewport meta on purpose. -->
-<title>Nimbus — Cloud notes for fast teams</title>
+<!-- phonefix demo: deliberately laptop-only. No viewport meta on purpose. Every "DEFECT" comment is caught by checks.js. -->
+<title>Nimbus — Notes that move as fast as you do</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#0b0b0c; --paper:#faf8f3; --accent:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; }
+  :root { --ink:#0b0b0c; --paper:#faf8f3; --card:#fffdf9; --accent:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; --soft:#3a3a30; }
   * { box-sizing:border-box; }
-  body { margin:0; font-family:'Funnel Sans',sans-serif; color:var(--ink); background:var(--paper); font-size:15px; }
+  body { margin:0; font-family:'Funnel Sans',sans-serif; color:var(--ink); background:var(--paper); font-size:15px; line-height:1.5; overflow-x:hidden; }
   h1,h2,h3 { font-family:'Funnel Display',sans-serif; letter-spacing:-.03em; line-height:.96; margin:0; }
+  .mono { font-family:'Geist Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--mute); }
 
   /* DEFECT: fixed-width container */
   .wrap { width:1200px; margin:0 auto; padding:0 24px; }
 
-  nav { display:flex; align-items:center; justify-content:space-between; height:72px; }
-  nav .logo { font-family:'Funnel Display'; font-weight:800; font-size:24px; }
-  nav ul { list-style:none; display:flex; gap:28px; margin:0; padding:0; }
+  nav { position:sticky; top:0; z-index:10; background:rgba(250,248,243,.85); backdrop-filter:blur(10px); }
+  nav .wrap { display:flex; align-items:center; justify-content:space-between; height:72px; }
+  nav .logo { font-family:'Funnel Display'; font-weight:800; font-size:24px; display:flex; align-items:center; gap:10px; }
+  nav .logo i { width:26px; height:26px; border-radius:50%; background:conic-gradient(var(--accent),var(--lime),var(--accent)); display:inline-block; }
+  nav ul { list-style:none; display:flex; gap:28px; margin:0; padding:0; align-items:center; }
   nav li { position:relative; }
-  nav a { color:var(--ink); text-decoration:none; font-size:14px; }
+  nav a { color:var(--ink); text-decoration:none; font-size:14px; font-weight:600; }
   /* DEFECT: hover-only dropdown */
   nav .menu { display:none; position:absolute; top:28px; left:0; background:#fff; border:1.5px solid var(--ink); border-radius:12px; padding:12px; width:200px; }
   nav li:hover .menu { display:block; }
-  nav .menu a { display:block; padding:4px 0; font-size:13px; }
+  nav .menu a { display:block; padding:4px 0; font-size:13px; font-weight:400; }
   /* DEFECT: 24px icon buttons */
   .icon-btn { width:24px; height:24px; border:1.5px solid var(--ink); border-radius:50%; background:#fff; font-size:11px; cursor:pointer; }
 
-  /* DEFECT: 100vh hero */
-  .hero { height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:48px; }
-  .hero h1 { font-size:88px; }
-  .hero p { font-size:18px; color:var(--mute); max-width:520px; }
+  /* DEFECT: 100vh hero, fixed 2-col */
+  .hero { height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:48px; position:relative; }
+  .hero .orb { position:absolute; border-radius:50%; filter:blur(40px); opacity:.55; pointer-events:none; }
+  .hero .orb.a { width:420px; height:420px; background:var(--accent); top:-80px; right:-120px; }
+  .hero .orb.b { width:260px; height:260px; background:var(--lime); bottom:40px; left:-80px; }
+  .hero h1 { font-size:92px; }
+  .hero h1 .w { display:inline-block; overflow:hidden; vertical-align:top; }
+  .hero h1 .w span { display:inline-block; }
+  .hero p { font-size:18px; color:var(--soft); max-width:520px; }
   .cta { display:inline-block; background:var(--ink); color:var(--lime); padding:14px 28px; border-radius:100px; text-decoration:none; font-weight:600; margin-top:24px; }
   .cta:hover { background:var(--accent); color:var(--ink); }
-  /* DEFECT: unbounded-DPR three.js canvas, hover-only tooltip */
-  #scene { width:560px; height:560px; display:block; border-radius:22px; background:var(--ink); }
+  /* DEFECT: fixed 560px uncapped-DPR canvas */
+  #scene { width:560px; height:560px; display:block; border-radius:22px; background:var(--ink); position:relative; z-index:1; }
 
-  /* DEFECT: 3-col grid fixed, 12px text */
-  .features { display:grid; grid-template-columns:repeat(3,380px); gap:24px; padding:96px 0; }
-  .card { background:#fffdf9; border:1.5px solid var(--ink); border-radius:22px; padding:28px; }
-  .card h3 { font-size:28px; margin-bottom:12px; }
-  .card p { font-size:12px; color:var(--mute); line-height:1.5; }
+  .marquee { background:var(--ink); color:var(--paper); padding:18px 0; overflow:hidden; white-space:nowrap; }
+  .marquee .track { display:inline-block; font-family:'Funnel Display'; font-size:40px; letter-spacing:-.02em; }
+  .marquee .track span { margin-right:48px; } .marquee .track em { font-style:normal; color:var(--accent); }
+
+  /* DEFECT: 3×380 grid, 12px copy, hover-reveal */
+  .features { display:grid; grid-template-columns:repeat(3,380px); gap:24px; padding:120px 0; }
+  .card { background:var(--card); border:1.5px solid var(--ink); border-radius:22px; padding:32px; min-height:260px; display:flex; flex-direction:column; justify-content:space-between; }
+  .card h3 { font-size:30px; margin:16px 0 10px; }
+  .card p { font-size:12px; color:var(--mute); }
   .card .more { opacity:0; transition:opacity .2s; font-size:11px; }
   .card:hover .more { opacity:1; }
+  .card .n { font-family:'Geist Mono'; font-size:11px; color:var(--mute); }
 
-  /* DEFECT: ScrollTrigger pin, desktop-only math */
-  .story { height:300vh; position:relative; }
-  .story .pin { height:100vh; display:flex; align-items:center; justify-content:center; background:var(--ink); color:var(--paper); overflow:hidden; }
-  .story .pin h2 { font-size:120px; white-space:nowrap; }
+  /* DEFECT: pinned horizontal gallery tuned for 1440px (x:-2400) */
+  .gallery { height:100vh; overflow:hidden; background:var(--ink); color:var(--paper); }
+  .gallery .rail { display:flex; gap:40px; height:100vh; align-items:center; padding:0 120px; width:max-content; }
+  .panel { width:720px; height:72vh; border-radius:28px; flex:none; display:flex; flex-direction:column; justify-content:flex-end; padding:40px; position:relative; overflow:hidden; background:#1a1a1d; }
+  .panel img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.75; }
+  .panel h3 { position:relative; font-size:64px; } .panel p { position:relative; font-size:16px; color:#cfcfc2; max-width:420px; }
+  .panel.lemon { background:var(--accent); color:var(--ink); } .panel.lemon p { color:var(--soft); }
 
-  /* DEFECT: oversized image, no srcset */
-  .shot { width:1600px; height:auto; display:block; margin:48px 0; border-radius:22px; }
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; padding:120px 0 60px; }
+  .stat b { font-family:'Funnel Display'; font-size:88px; font-weight:800; letter-spacing:-.04em; display:block; line-height:1; }
+  .stat .mono { display:block; margin-top:8px; }
 
-  /* DEFECT: autoplay video without playsinline/muted */
-  video { width:1152px; border-radius:22px; display:block; margin:0 auto; }
+  /* DEFECT: oversized image, no srcset, no dims */
+  .reveal { margin:60px 0; clip-path:inset(0 100% 0 0); }
+  .shot { width:1600px; height:auto; display:block; border-radius:22px; }
 
-  /* DEFECT: 12px inputs, tiny submit */
-  form { display:flex; gap:12px; padding:96px 0; }
+  video { width:1152px; border-radius:22px; display:block; margin:0 auto 120px; }
+
+  /* DEFECT: 12px inputs, 30px submit */
+  .signup { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; padding:0 0 120px; }
+  .signup h2 { font-size:72px; }
+  form { display:flex; gap:12px; margin-top:24px; }
   input { font-size:12px; padding:10px 14px; border:1.5px solid var(--ink); border-radius:100px; width:360px; font-family:inherit; }
   button[type=submit] { font-size:12px; height:30px; padding:0 14px; border-radius:100px; border:0; background:var(--ink); color:var(--lime); }
 
-  /* DEFECT: fixed bar with no safe-area, 100vh sticky sidebar */
-  .bar { position:fixed; bottom:0; left:0; right:0; background:var(--accent); padding:10px 0; font-size:12px; text-align:center; }
-  footer { padding:64px 0 96px; font-size:12px; color:var(--mute); }
+  /* DEFECT: fixed bar, no safe-area */
+  .bar { position:fixed; bottom:0; left:0; right:0; background:var(--accent); padding:10px 0; font-size:12px; text-align:center; z-index:9; }
+  footer { padding:64px 0 96px; font-size:12px; color:var(--mute); display:flex; justify-content:space-between; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav>
-    <div class="logo">Nimbus</div>
-    <ul>
-      <li><a href="#">Product</a>
-        <div class="menu"><a href="#">Notes</a><a href="#">Boards</a><a href="#">Sync</a></div>
-      </li>
-      <li><a href="#">Pricing</a></li>
-      <li><a href="#">Docs</a></li>
-      <li><button class="icon-btn" aria-label="Search">⌕</button></li>
-      <li><button class="icon-btn" aria-label="Theme">◐</button></li>
-    </ul>
-  </nav>
+<nav><div class="wrap">
+  <div class="logo"><i></i>Nimbus</div>
+  <ul>
+    <li><a href="#">Product</a><div class="menu"><a href="#">Notes</a><a href="#">Boards</a><a href="#">Sync</a></div></li>
+    <li><a href="#">Pricing</a></li><li><a href="#">Docs</a></li>
+    <li><button class="icon-btn" aria-label="Search">⌕</button></li>
+    <li><button class="icon-btn" aria-label="Theme">◐</button></li>
+  </ul>
+</div></nav>
 
-  <section class="hero">
-    <div>
-      <h1>Notes that move as fast as you do.</h1>
-      <p>Capture, link and share ideas across your whole team. Nimbus syncs in the background so you never wait.</p>
-      <a class="cta" href="#start">Start free</a>
-    </div>
-    <canvas id="scene" width="560" height="560"></canvas>
-  </section>
+<header class="wrap hero">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div>
+    <span class="mono">Cloud notes · v2.0</span>
+    <h1 data-split>Notes that move as fast as you do.</h1>
+    <p class="fade">Capture, link and share ideas across your whole team. Nimbus syncs in the background so you never wait.</p>
+    <a class="cta fade" href="#start">Start free</a>
+  </div>
+  <canvas id="scene" width="560" height="560"></canvas>
+</header>
 
-  <section class="features">
-    <div class="card"><h3>Instant sync</h3><p>Every keystroke lands on every device before you lift your finger. Offline edits merge without conflicts.</p><span class="more">Learn more →</span></div>
-    <div class="card"><h3>Linked thinking</h3><p>Backlinks, graph view and daily notes. Ideas find each other.</p><span class="more">Learn more →</span></div>
-    <div class="card"><h3>Team spaces</h3><p>Shared boards with roles, comments and version history.</p><span class="more">Learn more →</span></div>
-  </section>
+<div class="marquee"><div class="track"><span>Write once.</span><span><em>Read everywhere.</em></span><span>Sync in the dark.</span><span><em>Link your thinking.</em></span><span>Write once.</span><span><em>Read everywhere.</em></span><span>Sync in the dark.</span><span><em>Link your thinking.</em></span></div></div>
 
-  <section class="story">
-    <div class="pin"><h2 class="marquee">Write once. Read everywhere.</h2></div>
-  </section>
+<section class="wrap features">
+  <div class="card"><span class="n">01</span><div><h3>Instant sync</h3><p>Every keystroke lands on every device before you lift your finger. Offline edits merge without conflicts.</p></div><span class="more">Learn more →</span></div>
+  <div class="card"><span class="n">02</span><div><h3>Linked thinking</h3><p>Backlinks, graph view and daily notes. Ideas find each other.</p></div><span class="more">Learn more →</span></div>
+  <div class="card"><span class="n">03</span><div><h3>Team spaces</h3><p>Shared boards with roles, comments and version history.</p></div><span class="more">Learn more →</span></div>
+</section>
 
-  <img class="shot" src="https://picsum.photos/seed/nimbus/1600/900" alt="Nimbus app screenshot">
+<section class="gallery"><div class="rail">
+  <div class="panel"><img src="https://picsum.photos/seed/nimbus-a/1200/900" alt=""><h3>Capture</h3><p>Voice, photo, paste. It lands in the inbox and sorts itself.</p></div>
+  <div class="panel lemon"><h3>Connect</h3><p>Every note knows what it links to. The graph writes itself.</p></div>
+  <div class="panel"><img src="https://picsum.photos/seed/nimbus-b/1200/900" alt=""><h3>Share</h3><p>One link, read-only or edit. Comments stay on the paragraph.</p></div>
+  <div class="panel"><img src="https://picsum.photos/seed/nimbus-c/1200/900" alt=""><h3>Ship</h3><p>Publish a note as a page. Your domain, your fonts.</p></div>
+</div></section>
 
-  <video autoplay loop src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+<section class="wrap stats">
+  <div class="stat"><b data-count="48">0</b><span class="mono">ms sync</span></div>
+  <div class="stat"><b data-count="120">0</b><span class="mono">k teams</span></div>
+  <div class="stat"><b data-count="99">0</b><span class="mono">% uptime</span></div>
+  <div class="stat"><b data-count="7">0</b><span class="mono">platforms</span></div>
+</section>
 
-  <form id="start">
-    <input type="text" placeholder="Work email">
-    <button type="submit">Get access</button>
-  </form>
+<div class="wrap"><div class="reveal"><img class="shot" src="https://picsum.photos/seed/nimbus/1600/900" alt="Nimbus app screenshot"></div></div>
 
-  <footer>© Nimbus Labs · Built for the desk.</footer>
-</div>
+<video autoplay loop src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+
+<section class="wrap signup" id="start">
+  <div><h2 data-split>Your team, in sync by lunch.</h2>
+    <form><input type="text" placeholder="Work email"><button type="submit">Get access</button></form></div>
+  <div class="card"><span class="n">Free forever</span><div><h3>Solo plan</h3><p>Unlimited notes, three boards, one shared space. Upgrade when the team grows.</p></div><span class="more">Compare plans →</span></div>
+</section>
+
+<footer class="wrap"><span>© Nimbus Labs · Built for the desk.</span><span class="mono">Dubai · London · Lisbon</span></footer>
 <div class="bar">Nimbus 2.0 is here — read the changelog</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
   gsap.registerPlugin(ScrollTrigger);
+  // split headings into words for the reveal
+  document.querySelectorAll('[data-split]').forEach(h => { h.innerHTML = h.textContent.trim().split(' ').map(w => `<span class="w"><span>${w}</span></span>`).join(' '); });
   // DEFECT: no matchMedia, no reduced-motion, pixel values tuned for 1440px
-  gsap.to('.marquee', {
-    x: -1400,
-    ease: 'none',
-    scrollTrigger: { trigger: '.story', start: 'top top', end: 'bottom bottom', scrub: true, pin: '.pin' }
-  });
-  gsap.from('.card', { y: 80, opacity: 0, stagger: 0.15, scrollTrigger: { trigger: '.features', start: 'top 70%' } });
+  gsap.from('.hero .w span', { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.06 });
+  gsap.from('.hero .fade', { y: 30, opacity: 0, duration: .9, ease: 'power3.out', stagger: .12, delay: .5 });
+  gsap.to('.hero .orb.a', { y: -160, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.hero .orb.b', { y: 120, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  gsap.to('.marquee .track', { xPercent: -50, ease: 'none', duration: 18, repeat: -1 });
+  gsap.from('.card', { y: 80, opacity: 0, stagger: 0.15, duration: .9, ease: 'power3.out', scrollTrigger: { trigger: '.features', start: 'top 75%' } });
+  gsap.to('.gallery .rail', { x: -1800, ease: 'none', scrollTrigger: { trigger: '.gallery', start: 'top top', end: '+=1800', scrub: 1, pin: true } });
+  gsap.utils.toArray('.panel h3').forEach(h => gsap.from(h, { y: 60, opacity: 0, scrollTrigger: { trigger: h, containerAnimation: null, start: 'top 90%' } }));
+  gsap.utils.toArray('[data-count]').forEach(el => gsap.to(el, { innerText: +el.dataset.count, snap: { innerText: 1 }, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: '.stats', start: 'top 70%' } }));
+  gsap.to('.reveal', { clipPath: 'inset(0 0% 0 0)', ease: 'power2.inOut', duration: 1.2, scrollTrigger: { trigger: '.reveal', start: 'top 80%' } });
+  gsap.from('.signup .w span', { yPercent: 110, duration: 1, ease: 'expo.out', stagger: 0.05, scrollTrigger: { trigger: '.signup', start: 'top 70%' } });
 </script>
 <script type="module">
   import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js';
@@ -133,15 +172,12 @@
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(560, 560, false);
   const scene = new THREE.Scene();
-  const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
-  cam.position.z = 4;
-  const geo = new THREE.TorusKnotGeometry(1, 0.32, 180, 24);
-  const mat = new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 0.4, roughness: 0.3 });
-  const knot = new THREE.Mesh(geo, mat);
-  scene.add(knot);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 100); cam.position.z = 4;
+  const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(1, 0.32, 180, 24), new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 0.4, roughness: 0.3 }));
+  scene.add(knot, new THREE.AmbientLight(0xffffff, 0.6));
   const light = new THREE.DirectionalLight(0xc8f25c, 2); light.position.set(3, 4, 5); scene.add(light);
-  (function loop(){ knot.rotation.x += 0.006; knot.rotation.y += 0.009; renderer.render(scene, cam); requestAnimationFrame(loop); })();
+  let scroll = 0; addEventListener('scroll', () => { scroll = window.scrollY; });
+  (function loop(){ knot.rotation.x += 0.005; knot.rotation.y = scroll * 0.002 + knot.rotation.y + 0.008; renderer.render(scene, cam); requestAnimationFrame(loop); })();
 </script>
 </body>
 </html>

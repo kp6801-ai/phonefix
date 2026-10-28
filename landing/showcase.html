@@ -8,56 +8,77 @@
 <style>
   :root { --ink:#0b0b0c; --paper:#faf8f3; --lemon:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; }
   html, body { margin:0; width:1280px; height:720px; overflow:hidden; background:var(--ink); color:var(--paper); font-family:'Funnel Sans',sans-serif; }
-  .stage { position:relative; width:1280px; height:720px; }
-  .orb { position:absolute; top:28px; left:50%; transform:translateX(-50%); width:56px; height:56px; animation:spin 24s linear infinite; }
+  .stage { position:relative; width:1280px; height:720px; background:radial-gradient(900px 500px at 50% 110%, #1d1d14 0%, var(--ink) 60%); }
+  .orb { position:absolute; top:26px; left:50%; transform:translateX(-50%); width:52px; height:52px; animation:spin 24s linear infinite; }
   @keyframes spin { to { transform:translateX(-50%) rotate(360deg); } }
-  .head { position:absolute; top:96px; left:0; right:0; text-align:center; }
-  .head h1 { font-family:'Funnel Display'; font-weight:800; font-size:44px; letter-spacing:-.03em; line-height:1; margin:0; }
+  .head { position:absolute; top:88px; left:0; right:0; text-align:center; }
+  .head h1 { font-family:'Funnel Display'; font-weight:800; font-size:40px; letter-spacing:-.03em; line-height:1; margin:0; }
   .head h1 em { font-style:normal; color:var(--lemon); }
   .label { font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--mute); }
-  .devices { position:absolute; top:200px; left:0; right:0; display:flex; justify-content:center; align-items:flex-end; gap:56px; }
-  .laptop { position:relative; }
-  .laptop .screen { width:700px; height:437px; background:#000; border:10px solid #1c1c1f; border-bottom:0; border-radius:18px 18px 0 0; overflow:hidden; position:relative; box-shadow:0 30px 80px -30px rgba(0,0,0,.9); }
-  .laptop .base { width:800px; height:16px; margin-left:-50px; background:linear-gradient(#2a2a2e,#141416); border-radius:0 0 14px 14px; }
-  .laptop .base::after { content:''; position:absolute; left:50%; transform:translateX(-50%); bottom:8px; width:120px; height:5px; border-radius:0 0 6px 6px; background:#0a0a0b; }
-  .laptop iframe { width:1440px; height:900px; border:0; transform:scale(.4861); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; }
-  .phone { position:relative; }
-  .phone .screen { width:230px; height:498px; background:#000; border:9px solid #1c1c1f; border-radius:34px; overflow:hidden; position:relative; box-shadow:0 30px 80px -30px rgba(0,0,0,.9); }
-  .phone .screen::before { content:''; position:absolute; top:10px; left:50%; transform:translateX(-50%); width:84px; height:22px; background:#000; border-radius:12px; z-index:3; }
-  .phone iframe { width:375px; height:812px; border:0; transform:scale(.6133); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; }
-  .tag { position:absolute; left:50%; transform:translateX(-50%); top:-40px; white-space:nowrap; font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:8px 14px; border-radius:100px; }
-  .tag.bad { background:var(--lemon); color:var(--ink); } .tag.good { background:var(--lime); color:var(--ink); }
-  .cmd { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); background:var(--paper); color:var(--ink); border-radius:100px; padding:14px 26px; font-family:'Geist Mono'; font-size:18px; display:flex; gap:14px; align-items:center; opacity:0; }
+
+  /* ---- MacBook ---- */
+  .mac { position:absolute; left:140px; top:172px; width:860px; }
+  .mac .lid { position:relative; width:860px; height:500px; background:#0f0f11; border-radius:22px 22px 0 0; padding:18px 18px 0; box-shadow:0 40px 90px -30px rgba(0,0,0,.95), inset 0 0 0 1.5px #2b2b2f; }
+  .mac .lid::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:140px; height:20px; background:#0f0f11; border-radius:0 0 12px 12px; z-index:3; }
+  .mac .lid::after { content:''; position:absolute; top:7px; left:50%; transform:translateX(-50%); width:7px; height:7px; border-radius:50%; background:#1f3d1f; box-shadow:0 0 6px #2f7a2f; z-index:4; }
+  .mac .screen { position:relative; width:824px; height:482px; overflow:hidden; border-radius:8px 8px 0 0; background:#000; }
+  .mac .screen iframe { width:1440px; height:900px; border:0; transform:scale(.5722); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; }
+  .mac .hinge { width:860px; height:12px; background:linear-gradient(#3a3a3f, #1a1a1d); }
+  .mac .base { position:relative; width:1000px; height:26px; margin-left:-70px; background:linear-gradient(#2e2e32, #141416); border-radius:0 0 18px 18px; box-shadow:0 30px 60px -20px rgba(0,0,0,.9); }
+  .mac .base::before { content:''; position:absolute; left:50%; transform:translateX(-50%); top:0; width:160px; height:7px; background:#0a0a0b; border-radius:0 0 8px 8px; }
+  .mac .base::after { content:''; position:absolute; left:0; right:0; bottom:0; height:4px; background:#0a0a0b; border-radius:0 0 18px 18px; }
+
+  /* ---- iPhone 15 Pro ---- */
+  .iphone { position:absolute; left:960px; top:244px; width:230px; height:470px; border-radius:38px; background:linear-gradient(135deg,#4a4a50,#232326 40%,#3a3a3f); padding:7px; box-shadow:0 40px 80px -24px rgba(0,0,0,.95), 0 0 0 1.5px #55555c inset; z-index:5; transform:rotate(-3deg); }
+  .iphone::before, .iphone::after { content:''; position:absolute; background:#2a2a2e; border-radius:3px; }
+  .iphone::before { left:-3px; top:110px; width:3px; height:30px; box-shadow:0 52px 0 #2a2a2e, 0 106px 0 #2a2a2e; }
+  .iphone::after { right:-3px; top:150px; width:3px; height:64px; }
+  .iphone .glass { position:relative; width:216px; height:456px; border-radius:32px; overflow:hidden; background:#000; box-shadow:inset 0 0 0 3px #0b0b0c; }
+  .iphone .island { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:70px; height:20px; background:#000; border-radius:12px; z-index:3; }
+  .iphone .glass iframe { width:393px; height:830px; border:0; transform:scale(.5496); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; }
+  .iphone .home { position:absolute; bottom:6px; left:50%; transform:translateX(-50%); width:74px; height:4px; border-radius:2px; background:rgba(255,255,255,.75); z-index:3; }
+  .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:32px; background:linear-gradient(115deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 32%); pointer-events:none; z-index:2; }
+
+  .tag { position:absolute; white-space:nowrap; font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:8px 14px; border-radius:100px; z-index:6; }
+  .tag.bad { background:var(--lemon); color:var(--ink); left:140px; top:140px; }
+  .tag.good { background:var(--lime); color:var(--ink); right:40px; top:206px; }
+  .cmd { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); background:var(--paper); color:var(--ink); border-radius:100px; padding:14px 26px; font-family:'Geist Mono'; font-size:18px; display:flex; gap:14px; align-items:center; opacity:0; z-index:7; }
   .cmd .k { color:#1a7f37; }
-  .credit { position:absolute; bottom:24px; left:36px; font-family:'Geist Mono'; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); }
+  .credit { position:absolute; top:36px; right:36px; font-family:'Geist Mono'; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); }
 </style>
 </head>
 <body>
 <div class="stage">
   <img class="orb" src="assets/orb.svg" alt="">
   <div class="head"><div class="label">phonefix · one command. every phone.</div><h1>Built for a <em>laptop</em>. Fixed for every <em>thumb</em>.</h1></div>
-  <div class="devices">
-    <div class="laptop"><div class="screen"><iframe id="lap" src="../examples/laptop-only/" title="laptop-only demo"></iframe></div><div class="base"></div><span class="tag bad">What your AI saw · 1440px</span></div>
-    <div class="phone"><div class="screen"><iframe id="ph" src="../examples/fixed/" title="fixed demo"></iframe></div><span class="tag good">What phonefix shipped · iPhone · 0 issues</span></div>
+
+  <span class="tag bad">What your AI saw · 1440px</span>
+  <div class="mac">
+    <div class="lid"><div class="screen"><iframe id="lap" src="../examples/laptop-only/" title="laptop-only demo"></iframe></div></div>
+    <div class="hinge"></div>
+    <div class="base"></div>
   </div>
+
+  <span class="tag good">phonefix · iPhone · 0 issues</span>
+  <div class="iphone"><div class="glass"><div class="island"></div><iframe id="ph" src="../examples/fixed/" title="fixed demo"></iframe><div class="home"></div></div></div>
+
   <div class="cmd"><span>$</span><span><span class="k">npx</span> skills add kp6801-ai/phonefix</span></div>
   <div class="credit">by SPIKE Studio · Dubai</div>
 </div>
 <script>
-  // Auto-scroll both demos over ~8 s so ScrollTrigger pins and the 3D scenes run on camera.
   const ease = t => t < .5 ? 2*t*t : -1 + (4 - 2*t)*t;
   const scrollOver = (win, from, to, ms) => new Promise(res => { const t0 = performance.now(); (function f(now){ const p = Math.min(1, (now - t0)/ms); win.scrollTo(0, from + (to - from)*ease(p)); if (p < 1) requestAnimationFrame(f); else res(); })(t0); });
   window.__showcase = (async () => {
     if (location.search.includes('still')) return 'still';
     const lap = document.getElementById('lap'), ph = document.getElementById('ph');
     await Promise.all([lap, ph].map(f => new Promise(r => f.contentDocument && f.contentDocument.readyState === 'complete' ? r() : f.addEventListener('load', r))));
-    await new Promise(r => setTimeout(r, 1200));
+    await new Promise(r => setTimeout(r, 1800));
     const L = lap.contentWindow, P = ph.contentWindow;
     const lMax = L.document.documentElement.scrollHeight - L.innerHeight, pMax = P.document.documentElement.scrollHeight - P.innerHeight;
-    await Promise.all([scrollOver(L, 0, lMax, 7000), scrollOver(P, 0, pMax, 7000)]);
+    await Promise.all([scrollOver(L, 0, lMax, 7600), scrollOver(P, 0, pMax, 7600)]);
     document.querySelector('.cmd').animate([{ opacity: 0, transform: 'translate(-50%, 12px)' }, { opacity: 1, transform: 'translate(-50%, 0)' }], { duration: 500, fill: 'forwards', easing: 'cubic-bezier(.16,1,.3,1)' });
-    await new Promise(r => setTimeout(r, 1600));
-    await Promise.all([scrollOver(L, lMax, 0, 1200), scrollOver(P, pMax, 0, 1200)]);
+    await new Promise(r => setTimeout(r, 1500));
+    await Promise.all([scrollOver(L, lMax, 0, 1100), scrollOver(P, pMax, 0, 1100)]);
     return 'done';
   })();
 </script>

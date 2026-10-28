@@ -1,6 +1,6 @@
 # phonefix report — Nimbus demo
 
-**Mobile-perfect.** No severity-3/4 issues on any device. Desktop guard: layout moved 17.6% — check for desktop regressions.
+**Mobile-perfect.** No severity-3/4 issues on any device. Desktop guard: layout moved 20.6% — check for desktop regressions.
 
 | Category | Before | After | Worst remaining |
 |---|---|---|---|
@@ -16,6 +16,6 @@
 
 ## Remaining (0)
 
-Desktop guard: layout moved 17.6% (CHECK).
+Desktop guard: layout moved 20.6% (CHECK).
 
 _2026-10-28 · phonefix by SPIKE Studio_

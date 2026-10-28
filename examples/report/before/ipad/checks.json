@@ -12,8 +12,8 @@
       "id": "overflow-x",
       "category": "layout",
       "severity": 4,
-      "selector": "div.wrap > img.shot:nth-child(5)",
-      "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +202px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +202px past edge)",
+      "selector": "div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1)",
+      "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1) (1600px wide, +644px past edge); header.wrap.hero > div.orb.a:nth-child(1) (420px wide, +340px past edge); #start > div.card:nth-child(2) (576px wide, +220px past edge); section.wrap.stats > div.stat:nth-child(4) (282px wide, +220px past edge); section.wrap.stats > div.stat:nth-child(4) > b:nth-child(1) (282px wide, +220px past edge)",
       "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
     },
     {
@@ -21,7 +21,7 @@
       "category": "layout",
       "severity": 3,
       "selector": ".wrap",
-      "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+      "detail": "5 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .panel { width:720px }, .shot { width:1600px }, video { width:1152px }",
       "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
     },
     {
@@ -36,7 +36,7 @@
       "id": "input-font",
       "category": "forms",
       "severity": 3,
-      "selector": "#start > input:nth-child(1)",
+      "selector": "#start > div:nth-child(1) > form:nth-child(2) > input:nth-child(1)",
       "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
       "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
     },
@@ -44,8 +44,8 @@
       "id": "tap-targets",
       "category": "touch",
       "severity": 3,
-      "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
-      "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+      "selector": "nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1)",
+      "detail": "6 interactive element(s) smaller than 44×44: nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1) 50×18; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 45×18; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 32×18; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > div:nth-child(1) > form:nth-child(2) > button:nth-child(2) 91×30",
       "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
     },
     {
@@ -60,7 +60,7 @@
       "id": "video-attrs",
       "category": "media",
       "severity": 3,
-      "selector": "div.wrap > video:nth-child(6)",
+      "selector": "video",
       "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
       "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
     },
@@ -68,8 +68,8 @@
       "id": "tiny-text",
       "category": "type",
       "severity": 2,
-      "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
-      "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+      "selector": "nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+      "detail": "12 text element(s) under 12px: nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px; header.wrap.hero > div:nth-child(3) > span.mono:nth-child(1) 11px; section.wrap.features > div.card:nth-child(1) > span.n:nth-child(1) 11px; section.wrap.features > div.card:nth-child(2) > span.n:nth-child(1) 11px",
       "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
     },
     {
@@ -77,7 +77,7 @@
       "category": "layout",
       "severity": 2,
       "selector": ".hero",
-      "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+      "detail": "3 rule(s) use 100vh: .hero { height:100vh }; .gallery { height:100vh }; .gallery .rail { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
       "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
     },
     {
@@ -92,8 +92,8 @@
       "id": "img-srcset",
       "category": "media",
       "severity": 2,
-      "selector": "div.wrap > img.shot:nth-child(5)",
-      "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+      "selector": "div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1)",
+      "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1) 1600px — phones download desktop bytes.",
       "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
     },
     {
@@ -113,6 +113,14 @@
       "fix": "Prefer 16px base below 768px."
     },
     {
+      "id": "img-dims",
+      "category": "media",
+      "severity": 1,
+      "selector": "img",
+      "detail": "4 images lack width/height attributes — layout shift while loading.",
+      "fix": "Add intrinsic width/height attributes (CSS can still set max-width:100%; height:auto)."
+    },
+    {
       "id": "st-mobile-config",
       "category": "motion",
       "severity": 1,
@@ -128,7 +136,7 @@
       "dpr": 1.5673469305038452
     },
     "docWidth": 1624,
-    "docHeight": 7704,
+    "docHeight": 7560,
     "viewportMeta": null,
     "hasBreakpoints": false,
     "hasReducedMotion": false,
@@ -144,11 +152,11 @@
     },
     "counts": {
       "tapTargets": 10,
-      "tiny": 5,
-      "smallText": 2,
+      "tiny": 6,
+      "smallText": 12,
       "canvases": 1,
-      "images": 1,
-      "fixed": 1
+      "images": 4,
+      "fixed": 2
     },
     "sections": [
       [
@@ -161,27 +169,39 @@
       ],
       [
         1379,
-        357
+        96
       ],
       [
-        1736,
-        3921
+        1475,
+        500
       ],
       [
-        5705,
+        1975,
+        3107
+      ],
+      [
+        5082,
+        292
+      ],
+      [
+        5435,
         900
       ],
       [
-        6653,
+        6395,
         648
       ],
       [
-        7301,
-        230
+        7162,
+        380
       ],
       [
-        7531,
-        175
+        7542,
+        18
+      ],
+      [
+        1269,
+        38
       ]
     ],
     "cssUnreadable": 0

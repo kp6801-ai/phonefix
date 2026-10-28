@@ -3,153 +3,195 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- phonefix demo: the same Nimbus page after running the skill. Desktop design unchanged. -->
-<title>Nimbus — Cloud notes for fast teams</title>
+<!-- phonefix demo: the same Nimbus page after running the skill. Desktop design unchanged; every "FIX" comment maps to a check id. -->
+<title>Nimbus — Notes that move as fast as you do</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root { --ink:#0b0b0c; --paper:#faf8f3; --accent:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; --tap:44px; }
+  :root { --ink:#0b0b0c; --paper:#faf8f3; --card:#fffdf9; --accent:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; --soft:#3a3a30; --tap:44px; }
   * { box-sizing:border-box; }
   html { -webkit-text-size-adjust:100%; }
-  body { margin:0; font-family:'Funnel Sans',sans-serif; color:var(--ink); background:var(--paper); font-size:16px; }
+  body { margin:0; font-family:'Funnel Sans',sans-serif; color:var(--ink); background:var(--paper); font-size:16px; line-height:1.5; padding-bottom:calc(48px + env(safe-area-inset-bottom)); }
   h1,h2,h3 { font-family:'Funnel Display',sans-serif; letter-spacing:-.03em; line-height:.96; margin:0; }
+  .mono { font-family:'Geist Mono',monospace; font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:var(--mute); }
 
-  /* FIX overflow root cause: fluid container (1200px on desktop, 100% on phones) */
+  /* FIX overflow-x / fixed-width-rules: fluid container */
   .wrap { width:min(1200px, 100%); margin:0 auto; padding:0 clamp(16px, 4vw, 24px); }
 
-  nav { display:flex; align-items:center; justify-content:space-between; min-height:72px; gap:12px; }
-  nav .logo { font-family:'Funnel Display'; font-weight:800; font-size:24px; }
-  nav ul { list-style:none; display:flex; gap:clamp(8px, 2vw, 28px); margin:0; padding:0; align-items:center; }
+  nav { position:sticky; top:0; z-index:10; background:rgba(250,248,243,.85); backdrop-filter:blur(10px); }
+  nav .wrap { display:flex; align-items:center; justify-content:space-between; min-height:64px; gap:12px; }
+  nav .logo { font-family:'Funnel Display'; font-weight:800; font-size:24px; display:flex; align-items:center; gap:10px; }
+  nav .logo i { width:26px; height:26px; border-radius:50%; background:conic-gradient(var(--accent),var(--lime),var(--accent)); display:inline-block; }
+  nav ul { list-style:none; display:flex; gap:clamp(4px, 2vw, 28px); margin:0; padding:0; align-items:center; }
   nav li { position:relative; }
-  /* FIX tap targets: 44px min height via padding */
-  nav a, nav .menu-btn { display:inline-flex; align-items:center; min-height:var(--tap); padding:0 6px; color:var(--ink); text-decoration:none; font-size:15px; background:none; border:0; font-family:inherit; cursor:pointer; }
-  /* FIX hover-only menu → tap toggle with aria-expanded; hover kept for fine pointers only */
+  /* FIX tap-targets: 44px min via padding */
+  nav a, nav .menu-btn { display:inline-flex; align-items:center; min-height:var(--tap); padding:0 8px; color:var(--ink); text-decoration:none; font-size:15px; font-weight:600; background:none; border:0; font-family:inherit; cursor:pointer; }
+  /* FIX hover-only: tap toggle, hover kept for fine pointers */
   nav .menu { display:none; position:absolute; top:100%; left:0; background:#fff; border:1.5px solid var(--ink); border-radius:12px; padding:8px; width:200px; z-index:5; }
   nav li.open .menu { display:block; }
   @media (hover:hover) and (pointer:fine) { nav li:hover .menu { display:block; } }
-  nav .menu a { display:flex; padding:0 10px; min-height:var(--tap); font-size:15px; }
-  /* FIX 24px icon buttons: glyph stays small, hit area 44px */
+  nav .menu a { display:flex; padding:0 10px; min-height:var(--tap); font-size:15px; font-weight:400; }
   .icon-btn { width:var(--tap); height:var(--tap); display:inline-grid; place-items:center; border:0; background:none; cursor:pointer; padding:0; font-family:inherit; }
   .icon-btn span { width:24px; height:24px; border:1.5px solid var(--ink); border-radius:50%; background:#fff; font-size:12px; display:grid; place-items:center; }
-  @media (max-width:640px) { nav ul li:nth-child(3) { display:none; } }
+  @media (max-width:640px) { nav ul li:nth-child(2), nav ul li:nth-child(3) { display:none; } nav a, nav .menu-btn { padding:0 6px; } }
 
-  /* FIX 100vh → svh with fallback; grid collapses on phones */
-  .hero { min-height:100vh; min-height:100svh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:clamp(24px, 4vw, 48px); padding:24px 0; }
-  .hero h1 { font-size:clamp(40px, 9vw, 88px); }
-  .hero p { font-size:clamp(16px, 2vw, 18px); color:var(--mute); max-width:520px; }
+  /* FIX vh-units: svh with fallback; grid collapses */
+  .hero { min-height:100vh; min-height:100svh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:clamp(24px, 4vw, 48px); position:relative; padding:24px 0; overflow-x:clip; }
+  .hero .orb { position:absolute; border-radius:50%; filter:blur(40px); opacity:.55; pointer-events:none; }
+  .hero .orb.a { width:min(420px, 60vw); height:min(420px, 60vw); background:var(--accent); top:-80px; right:-120px; }
+  .hero .orb.b { width:min(260px, 40vw); height:min(260px, 40vw); background:var(--lime); bottom:40px; left:-80px; }
+  .hero h1 { font-size:clamp(42px, 9vw, 92px); }
+  .hero h1 .w { display:inline-block; overflow:hidden; vertical-align:top; }
+  .hero h1 .w span { display:inline-block; }
+  .hero p { font-size:clamp(16px, 2vw, 18px); color:var(--soft); max-width:520px; }
   .cta { display:inline-flex; align-items:center; min-height:48px; background:var(--ink); color:var(--lime); padding:0 28px; border-radius:100px; text-decoration:none; font-weight:600; margin-top:24px; }
   @media (hover:hover) and (pointer:fine) { .cta:hover { background:var(--accent); color:var(--ink); } }
   .cta:active, .cta:focus-visible { background:var(--accent); color:var(--ink); outline:2px solid var(--ink); outline-offset:2px; }
-  /* FIX fixed 560px canvas → sized by container, square, scrolls the page over it */
-  .scene-wrap { width:min(560px, 100%); aspect-ratio:1/1; justify-self:center; }
+  /* FIX canvas-dpr / fixed canvas: sized by container */
+  .scene-wrap { width:min(560px, 100%); aspect-ratio:1/1; justify-self:center; position:relative; z-index:1; }
   #scene { width:100%; height:100%; display:block; border-radius:22px; background:var(--ink); touch-action:pan-y; }
   @media (max-width:860px) { .hero { grid-template-columns:1fr; } .scene-wrap { width:min(420px, 100%); } }
 
-  /* FIX fixed 3×380px grid → auto-fit fluid; 12px copy → 16px */
-  .features { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap:24px; padding:clamp(48px, 8vw, 96px) 0; }
-  .card { background:#fffdf9; border:1.5px solid var(--ink); border-radius:22px; padding:28px; }
-  .card h3 { font-size:clamp(24px, 3vw, 28px); margin-bottom:12px; }
-  .card p { font-size:16px; color:var(--mute); line-height:1.5; }
-  /* FIX hover-revealed "Learn more" → always visible on touch, hover reveal only for fine pointers */
-  .card .more { opacity:1; font-size:14px; }
+  .marquee { background:var(--ink); color:var(--paper); padding:18px 0; overflow:hidden; white-space:nowrap; }
+  .marquee .track { display:inline-block; font-family:'Funnel Display'; font-size:clamp(26px, 4vw, 40px); letter-spacing:-.02em; }
+  .marquee .track span { margin-right:48px; } .marquee .track em { font-style:normal; color:var(--accent); }
+
+  /* FIX grid + tiny-text + hover reveal */
+  .features { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap:24px; padding:clamp(56px, 8vw, 120px) 0; }
+  .card { background:var(--card); border:1.5px solid var(--ink); border-radius:22px; padding:clamp(22px, 3vw, 32px); min-height:260px; display:flex; flex-direction:column; justify-content:space-between; }
+  .card h3 { font-size:clamp(24px, 3vw, 30px); margin:16px 0 10px; }
+  .card p { font-size:16px; color:var(--mute); }
+  .card .more { opacity:1; font-size:14px; display:inline-flex; align-items:center; min-height:var(--tap); color:var(--ink); text-decoration:none; }
   @media (hover:hover) and (pointer:fine) { .card .more { opacity:0; transition:opacity .2s; } .card:hover .more { opacity:1; } }
+  .card .n { font-family:'Geist Mono'; font-size:12px; color:var(--mute); }
 
-  /* FIX pinned story: fits the smallest viewport; pin only on desktop (see JS) */
-  .story { position:relative; }
-  .story .pin { min-height:100vh; min-height:100svh; display:flex; align-items:center; justify-content:center; background:var(--ink); color:var(--paper); overflow-x:clip; /* pinned container only, never body */ }
-  .story .pin h2 { font-size:clamp(36px, 8vw, 120px); white-space:nowrap; padding:0 16px; }
-  @media (min-width:861px) { .story { height:300vh; } .story .pin { height:100vh; height:100svh; } }
+  /* FIX pin-taller / tween-px: pinned horizontal on desktop, vertical stack on phones */
+  .gallery { background:var(--ink); color:var(--paper); overflow-x:clip; }
+  .gallery .rail { display:flex; gap:40px; align-items:center; padding:0 120px; width:max-content; height:100vh; height:100svh; }
+  .panel { width:min(720px, 80vw); height:72svh; border-radius:28px; flex:none; display:flex; flex-direction:column; justify-content:flex-end; padding:40px; position:relative; overflow:hidden; background:#1a1a1d; }
+  .panel img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.75; }
+  .panel h3 { position:relative; font-size:clamp(36px, 6vw, 64px); } .panel p { position:relative; font-size:16px; color:#cfcfc2; max-width:420px; }
+  .panel.lemon { background:var(--accent); color:var(--ink); } .panel.lemon p { color:var(--soft); }
+  @media (max-width:860px) { .gallery .rail { flex-direction:column; width:auto; height:auto; padding:48px 16px; gap:16px; align-items:stretch; } .panel { width:100%; height:auto; min-height:360px; padding:24px; } }
 
-  /* FIX image: fluid, intrinsic size, lazy */
-  .shot { width:100%; max-width:1600px; height:auto; display:block; margin:48px 0; border-radius:22px; }
-  video { width:100%; max-width:1152px; height:auto; border-radius:22px; display:block; margin:0 auto; background:var(--ink); }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:24px; padding:clamp(56px, 8vw, 120px) 0 40px; }
+  .stat b { font-family:'Funnel Display'; font-size:clamp(48px, 8vw, 88px); font-weight:800; letter-spacing:-.04em; display:block; line-height:1; }
+  .stat .mono { display:block; margin-top:8px; }
 
-  /* FIX inputs 16px, submit 48px tall, wraps on phones */
-  form { display:flex; flex-wrap:wrap; gap:12px; padding:clamp(48px, 8vw, 96px) 0; }
-  input { font-size:16px; min-height:48px; padding:0 18px; border:1.5px solid var(--ink); border-radius:100px; flex:1 1 240px; max-width:360px; font-family:inherit; min-width:0; }
+  /* FIX img-srcset / img-dims: fluid, intrinsic size, srcset, lazy */
+  .reveal { margin:40px 0; clip-path:inset(0 100% 0 0); }
+  .shot { width:100%; max-width:1600px; height:auto; display:block; border-radius:22px; }
+
+  video { width:100%; max-width:1152px; height:auto; border-radius:22px; display:block; margin:0 auto clamp(56px, 8vw, 120px); background:var(--ink); }
+
+  /* FIX input-font / tap-targets: 16px inputs, 48px submit, wraps */
+  .signup { display:grid; grid-template-columns:1fr 1fr; gap:clamp(24px, 4vw, 48px); align-items:center; padding:0 0 clamp(56px, 8vw, 120px); }
+  .signup h2 { font-size:clamp(36px, 7vw, 72px); }
+  .signup h2 .w { display:inline-block; overflow:hidden; vertical-align:top; } .signup h2 .w span { display:inline-block; }
+  form { display:flex; flex-wrap:wrap; gap:12px; margin-top:24px; }
+  input { font-size:16px; min-height:48px; padding:0 18px; border:1.5px solid var(--ink); border-radius:100px; flex:1 1 220px; max-width:360px; font-family:inherit; min-width:0; }
   button[type=submit] { font-size:16px; min-height:48px; padding:0 22px; border-radius:100px; border:0; background:var(--ink); color:var(--lime); font-family:inherit; }
+  @media (max-width:860px) { .signup { grid-template-columns:1fr; } }
 
-  /* FIX fixed bar: safe-area padding, body gets matching bottom space */
-  .bar { position:fixed; bottom:0; left:0; right:0; background:var(--accent); padding:12px 16px calc(12px + env(safe-area-inset-bottom)); font-size:14px; text-align:center; }
-  body { padding-bottom:calc(48px + env(safe-area-inset-bottom)); }
-  footer { padding:64px 0 48px; font-size:14px; color:var(--mute); }
-  #start { scroll-margin-top:16px; }
-  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+  /* FIX safe-area: fixed bar padded for the home indicator */
+  .bar { position:fixed; bottom:0; left:0; right:0; background:var(--accent); padding:12px 16px calc(12px + env(safe-area-inset-bottom)); font-size:14px; text-align:center; z-index:9; }
+  footer { padding:48px 0 32px; font-size:14px; color:var(--mute); display:flex; flex-wrap:wrap; gap:8px 24px; justify-content:space-between; }
+  #start { scroll-margin-top:80px; }
+  /* FIX reduced-motion */
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } .reveal { clip-path:none; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <nav>
-    <div class="logo">Nimbus</div>
-    <ul>
-      <li><button class="menu-btn" aria-expanded="false" aria-controls="product-menu">Product ▾</button>
-        <div class="menu" id="product-menu"><a href="#">Notes</a><a href="#">Boards</a><a href="#">Sync</a></div>
-      </li>
-      <li><a href="#">Pricing</a></li>
-      <li><a href="#">Docs</a></li>
-      <li><button class="icon-btn" aria-label="Search"><span>⌕</span></button></li>
-      <li><button class="icon-btn" aria-label="Theme"><span>◐</span></button></li>
-    </ul>
-  </nav>
+<nav><div class="wrap">
+  <div class="logo"><i></i>Nimbus</div>
+  <ul>
+    <li><button class="menu-btn" aria-expanded="false" aria-controls="product-menu">Product ▾</button><div class="menu" id="product-menu"><a href="#">Notes</a><a href="#">Boards</a><a href="#">Sync</a></div></li>
+    <li><a href="#">Pricing</a></li><li><a href="#">Docs</a></li>
+    <li><button class="icon-btn" aria-label="Search"><span>⌕</span></button></li>
+    <li><button class="icon-btn" aria-label="Theme"><span>◐</span></button></li>
+  </ul>
+</div></nav>
 
-  <section class="hero">
-    <div>
-      <h1>Notes that move as fast as you do.</h1>
-      <p>Capture, link and share ideas across your whole team. Nimbus syncs in the background so you never wait.</p>
-      <a class="cta" href="#start">Start free</a>
-    </div>
-    <div class="scene-wrap"><canvas id="scene" aria-label="Rotating 3D knot"></canvas></div>
-  </section>
+<header class="wrap hero">
+  <div class="orb a"></div><div class="orb b"></div>
+  <div>
+    <span class="mono">Cloud notes · v2.0</span>
+    <h1 data-split>Notes that move as fast as you do.</h1>
+    <p class="fade">Capture, link and share ideas across your whole team. Nimbus syncs in the background so you never wait.</p>
+    <a class="cta fade" href="#start">Start free</a>
+  </div>
+  <div class="scene-wrap"><canvas id="scene" aria-label="Rotating 3D knot"></canvas></div>
+</header>
 
-  <section class="features">
-    <div class="card"><h3>Instant sync</h3><p>Every keystroke lands on every device before you lift your finger. Offline edits merge without conflicts.</p><a class="more" href="#">Learn more →</a></div>
-    <div class="card"><h3>Linked thinking</h3><p>Backlinks, graph view and daily notes. Ideas find each other.</p><a class="more" href="#">Learn more →</a></div>
-    <div class="card"><h3>Team spaces</h3><p>Shared boards with roles, comments and version history.</p><a class="more" href="#">Learn more →</a></div>
-  </section>
+<div class="marquee"><div class="track"><span>Write once.</span><span><em>Read everywhere.</em></span><span>Sync in the dark.</span><span><em>Link your thinking.</em></span><span>Write once.</span><span><em>Read everywhere.</em></span><span>Sync in the dark.</span><span><em>Link your thinking.</em></span></div></div>
 
-  <section class="story">
-    <div class="pin"><h2 class="marquee">Write once. Read everywhere.</h2></div>
-  </section>
+<section class="wrap features">
+  <div class="card"><span class="n">01</span><div><h3>Instant sync</h3><p>Every keystroke lands on every device before you lift your finger. Offline edits merge without conflicts.</p></div><a class="more" href="#">Learn more →</a></div>
+  <div class="card"><span class="n">02</span><div><h3>Linked thinking</h3><p>Backlinks, graph view and daily notes. Ideas find each other.</p></div><a class="more" href="#">Learn more →</a></div>
+  <div class="card"><span class="n">03</span><div><h3>Team spaces</h3><p>Shared boards with roles, comments and version history.</p></div><a class="more" href="#">Learn more →</a></div>
+</section>
 
-  <img class="shot" src="https://picsum.photos/seed/nimbus/1600/900" srcset="https://picsum.photos/seed/nimbus/800/450 800w, https://picsum.photos/seed/nimbus/1600/900 1600w" sizes="(max-width: 1200px) 100vw, 1200px" width="1600" height="900" loading="lazy" decoding="async" alt="Nimbus app screenshot">
+<section class="gallery"><div class="rail">
+  <div class="panel"><img src="https://picsum.photos/seed/nimbus-a/1200/900" width="1200" height="900" loading="lazy" alt=""><h3>Capture</h3><p>Voice, photo, paste. It lands in the inbox and sorts itself.</p></div>
+  <div class="panel lemon"><h3>Connect</h3><p>Every note knows what it links to. The graph writes itself.</p></div>
+  <div class="panel"><img src="https://picsum.photos/seed/nimbus-b/1200/900" width="1200" height="900" loading="lazy" alt=""><h3>Share</h3><p>One link, read-only or edit. Comments stay on the paragraph.</p></div>
+  <div class="panel"><img src="https://picsum.photos/seed/nimbus-c/1200/900" width="1200" height="900" loading="lazy" alt=""><h3>Ship</h3><p>Publish a note as a page. Your domain, your fonts.</p></div>
+</div></section>
 
-  <video autoplay muted loop playsinline preload="metadata" poster="https://picsum.photos/seed/nimbus-poster/1152/648" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+<section class="wrap stats">
+  <div class="stat"><b data-count="48">0</b><span class="mono">ms sync</span></div>
+  <div class="stat"><b data-count="120">0</b><span class="mono">k teams</span></div>
+  <div class="stat"><b data-count="99">0</b><span class="mono">% uptime</span></div>
+  <div class="stat"><b data-count="7">0</b><span class="mono">platforms</span></div>
+</section>
 
-  <form id="start">
-    <input type="email" inputmode="email" enterkeyhint="go" autocomplete="email" placeholder="Work email" aria-label="Work email">
-    <button type="submit">Get access</button>
-  </form>
+<div class="wrap"><div class="reveal"><img class="shot" src="https://picsum.photos/seed/nimbus/1600/900" srcset="https://picsum.photos/seed/nimbus/800/450 800w, https://picsum.photos/seed/nimbus/1600/900 1600w" sizes="(max-width: 1200px) 100vw, 1200px" width="1600" height="900" loading="lazy" decoding="async" alt="Nimbus app screenshot"></div></div>
 
-  <footer>© Nimbus Labs · Built for the desk, fixed for the thumb.</footer>
-</div>
+<video autoplay muted loop playsinline preload="metadata" poster="https://picsum.photos/seed/nimbus-poster/1152/648" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+
+<section class="wrap signup" id="start">
+  <div><h2 data-split>Your team, in sync by lunch.</h2>
+    <form><input type="email" inputmode="email" enterkeyhint="go" autocomplete="email" placeholder="Work email" aria-label="Work email"><button type="submit">Get access</button></form></div>
+  <div class="card"><span class="n">Free forever</span><div><h3>Solo plan</h3><p>Unlimited notes, three boards, one shared space. Upgrade when the team grows.</p></div><a class="more" href="#">Compare plans →</a></div>
+</section>
+
+<footer class="wrap"><span>© Nimbus Labs · Built for the desk, fixed for the thumb.</span><span class="mono">Dubai · London · Lisbon</span></footer>
 <div class="bar">Nimbus 2.0 is here — read the changelog</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
   // Menu: tap toggle (hover still works on fine pointers via CSS)
-  document.querySelectorAll('.menu-btn').forEach(btn => btn.addEventListener('click', () => {
-    const li = btn.closest('li'); const open = li.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open));
-  }));
+  document.querySelectorAll('.menu-btn').forEach(btn => btn.addEventListener('click', () => { const li = btn.closest('li'); const open = li.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open)); }));
   document.addEventListener('click', e => { if (!e.target.closest('nav li')) document.querySelectorAll('nav li.open').forEach(li => { li.classList.remove('open'); li.querySelector('.menu-btn').setAttribute('aria-expanded', 'false'); }); });
 
   gsap.registerPlugin(ScrollTrigger);
   ScrollTrigger.config({ ignoreMobileResize: true });
+  document.querySelectorAll('[data-split]').forEach(h => { h.innerHTML = h.textContent.trim().split(' ').map(w => `<span class="w"><span>${w}</span></span>`).join(' '); });
+
   const mm = gsap.matchMedia();
   mm.add({ isDesktop: '(min-width: 861px)', isMobile: '(max-width: 860px)', reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
     const { isDesktop, reduce } = ctx.conditions;
-    if (reduce) { gsap.set('.card', { clearProps: 'all' }); return; }
-    // Marquee: pinned scrub on desktop; on phones the heading simply wraps and fades in.
+    if (reduce) { gsap.set('[data-count]', { innerText: (i, el) => el.dataset.count }); gsap.set('.reveal', { clipPath: 'none' }); return; }
+    // Shared on every size: hero reveal, orb parallax, marquee, cards, counters, image reveal, signup heading
+    gsap.from('.hero .w span', { yPercent: 110, duration: 1.1, ease: 'expo.out', stagger: 0.06 });
+    gsap.from('.hero .fade', { y: 30, opacity: 0, duration: .9, ease: 'power3.out', stagger: .12, delay: .5 });
+    gsap.to('.hero .orb.a', { y: isDesktop ? -160 : -60, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.to('.hero .orb.b', { y: isDesktop ? 120 : 50, scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+    gsap.to('.marquee .track', { xPercent: -50, ease: 'none', duration: 18, repeat: -1 });
+    gsap.from('.card', { y: 60, opacity: 0, stagger: 0.12, duration: .8, ease: 'power3.out', scrollTrigger: { trigger: '.features', start: 'top 80%' } });
+    gsap.utils.toArray('[data-count]').forEach(el => gsap.to(el, { innerText: +el.dataset.count, snap: { innerText: 1 }, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: '.stats', start: 'top 75%' } }));
+    gsap.to('.reveal', { clipPath: 'inset(0 0% 0 0)', ease: 'power2.inOut', duration: 1.2, scrollTrigger: { trigger: '.reveal', start: 'top 85%' } });
+    gsap.from('.signup .w span', { yPercent: 110, duration: 1, ease: 'expo.out', stagger: 0.05, scrollTrigger: { trigger: '.signup', start: 'top 75%' } });
     if (isDesktop) {
-      gsap.to('.marquee', {
-        x: () => -(document.querySelector('.marquee').scrollWidth - window.innerWidth + 32),
-        ease: 'none',
-        scrollTrigger: { trigger: '.story', start: 'top top', end: 'bottom bottom', scrub: true, pin: '.pin', anticipatePin: 1, invalidateOnRefresh: true }
-      });
+      // Horizontal gallery: pinned, distance measured, not hard-coded
+      const rail = document.querySelector('.gallery .rail');
+      const tween = gsap.to(rail, { x: () => -(rail.scrollWidth - window.innerWidth), ease: 'none', scrollTrigger: { trigger: '.gallery', start: 'top top', end: () => '+=' + (rail.scrollWidth - window.innerWidth), scrub: 1, pin: true, anticipatePin: 1, invalidateOnRefresh: true } });
+      gsap.utils.toArray('.panel h3').forEach(h => gsap.from(h, { y: 60, opacity: 0, scrollTrigger: { trigger: h, containerAnimation: tween, start: 'left 85%' } }));
     } else {
-      gsap.from('.marquee', { opacity: 0, y: 24, duration: .8, scrollTrigger: { trigger: '.story', start: 'top 70%' } });
+      // Phones: vertical stack, each panel slides in
+      gsap.utils.toArray('.panel').forEach(p => gsap.from(p, { y: 40, opacity: 0, duration: .7, ease: 'power3.out', scrollTrigger: { trigger: p, start: 'top 85%' } }));
     }
-    gsap.from('.card', { y: 40, opacity: 0, stagger: 0.12, duration: .7, scrollTrigger: { trigger: '.features', start: 'top 75%' } });
   });
   document.fonts.ready.then(() => ScrollTrigger.refresh());
 </script>
@@ -164,16 +206,15 @@
   renderer.setPixelRatio(dpr);
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 100); cam.position.z = 4;
-  const geo = new THREE.TorusKnotGeometry(1, 0.32, lite ? 96 : 180, lite ? 12 : 24);
-  const mat = new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 0.4, roughness: 0.3 });
-  const knot = new THREE.Mesh(geo, mat); scene.add(knot);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const knot = new THREE.Mesh(new THREE.TorusKnotGeometry(1, 0.32, lite ? 96 : 180, lite ? 12 : 24), new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 0.4, roughness: 0.3 }));
+  scene.add(knot, new THREE.AmbientLight(0xffffff, 0.6));
   const light = new THREE.DirectionalLight(0xc8f25c, 2); light.position.set(3, 4, 5); scene.add(light);
   const render = () => renderer.render(scene, cam);
   const resize = () => { const { width, height } = canvas.getBoundingClientRect(); renderer.setSize(width, height, false); cam.aspect = width / height; cam.updateProjectionMatrix(); render(); };
   new ResizeObserver(resize).observe(canvas.parentElement); resize();
-  let visible = true, running = true;
-  const loop = () => { if (!running) return; if (visible && !document.hidden) { knot.rotation.x += 0.006; knot.rotation.y += 0.009; render(); } requestAnimationFrame(loop); };
+  let visible = true, running = true, scroll = 0;
+  addEventListener('scroll', () => { scroll = window.scrollY; }, { passive: true });
+  const loop = () => { if (!running) return; if (visible && !document.hidden) { knot.rotation.x += 0.005; knot.rotation.y += 0.008 + scroll * 0.00002; render(); } requestAnimationFrame(loop); };
   new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.05 }).observe(canvas);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && running) render(); });
   canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); running = false; });

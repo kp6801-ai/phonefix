@@ -4,8 +4,8 @@
       "id": "overflow-x",
       "category": "layout",
       "severity": 4,
-      "selector": "div.wrap > img.shot:nth-child(5)",
-      "detail": "Page is 1744px wide on a 1440px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +304px past edge)",
+      "selector": "div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1)",
+      "detail": "Page is 1744px wide on a 1440px viewport — horizontal scroll. Widest offenders: div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1) (1600px wide, +304px past edge)",
       "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
     }
   ],
@@ -16,7 +16,7 @@
       "dpr": 1
     },
     "docWidth": 1744,
-    "docHeight": 6076,
+    "docHeight": 6747,
     "viewportMeta": null,
     "hasBreakpoints": false,
     "hasReducedMotion": false,
@@ -32,11 +32,11 @@
     },
     "counts": {
       "tapTargets": 10,
-      "tiny": 5,
-      "smallText": 2,
+      "tiny": 6,
+      "smallText": 12,
       "canvases": 1,
-      "images": 1,
-      "fixed": 1
+      "images": 4,
+      "fixed": 2
     },
     "sections": [
       [
@@ -49,27 +49,39 @@
       ],
       [
         972,
-        356
+        96
       ],
       [
-        1328,
+        1068,
+        500
+      ],
+      [
+        1568,
         2700
       ],
       [
-        4076,
+        4268,
+        293
+      ],
+      [
+        4621,
         900
       ],
       [
-        5024,
+        5581,
         648
       ],
       [
-        5672,
-        229
+        6349,
+        380
       ],
       [
-        5901,
-        175
+        6729,
+        18
+      ],
+      [
+        862,
+        38
       ]
     ],
     "cssUnreadable": 0

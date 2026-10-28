@@ -39,9 +39,9 @@ await browser.close(); server.close();
 // trim the first ~1.5 s of load, encode mp4 + gif
 const start = '1.5';
 const mp4 = path.join(out, 'demo.mp4'), gif = path.join(out, 'demo.gif'), pal = path.join(tmp, 'pal.png');
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-t', '12', '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', mp4]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-t', '12', '-vf', 'fps=10,scale=900:-1:flags=lanczos,palettegen=max_colors=128:stats_mode=diff', pal]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-i', pal, '-t', '12', '-lavfi', 'fps=10,scale=900:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-t', '13', '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', mp4]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-t', '13', '-vf', 'fps=10,scale=900:-1:flags=lanczos,palettegen=max_colors=128:stats_mode=diff', pal]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-i', pal, '-t', '13', '-lavfi', 'fps=10,scale=900:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif]);
 const sz = f => (fs.statSync(f).size / 1e6).toFixed(2) + ' MB';
 console.log(`scroll scene played ${played.toFixed(1)}s\nmp4 ${sz(mp4)} · gif ${sz(gif)} · poster ${sz(path.join(out, 'demo-poster.jpg'))}`);
 fs.rmSync(tmp, { recursive: true, force: true });

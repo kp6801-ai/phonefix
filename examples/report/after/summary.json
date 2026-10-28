@@ -1,7 +1,7 @@
 {
   "label": "after",
   "origin": "examples/fixed",
-  "generatedAt": "2026-10-28T21:53:55.376Z",
+  "generatedAt": "2026-10-28T22:23:49.617Z",
   "devices": [
     {
       "id": "iphone-se",
@@ -30,7 +30,7 @@
           "dpr": 2
         },
         "docWidth": 375,
-        "docHeight": 3002,
+        "docHeight": 4796,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -45,45 +45,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
-            667
+            64,
+            728
           ],
           [
-            739,
-            714
+            792,
+            75
           ],
           [
-            1453,
-            667
+            867,
+            940
           ],
           [
-            2168,
+            1807,
+            1584
+          ],
+          [
+            3391,
+            268
+          ],
+          [
+            3699,
             193
           ],
           [
-            2409,
-            193
+            3932,
+            211
           ],
           [
-            2602,
-            204
+            4198,
+            481
           ],
           [
-            2806,
-            148
+            4680,
+            68
+          ],
+          [
+            622,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -119,7 +131,7 @@
           "dpr": 3
         },
         "docWidth": 393,
-        "docHeight": 3002,
+        "docHeight": 4789,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -134,45 +146,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
-            674
+            64,
+            722
           ],
           [
-            746,
-            713
+            786,
+            75
           ],
           [
-            1459,
-            659
+            861,
+            940
           ],
           [
-            2166,
+            1801,
+            1584
+          ],
+          [
+            3385,
+            268
+          ],
+          [
+            3693,
             203
           ],
           [
-            2417,
-            203
+            3936,
+            221
           ],
           [
-            2620,
-            204
+            4213,
+            481
           ],
           [
-            2824,
-            130
+            4694,
+            47
+          ],
+          [
+            614,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -208,7 +232,7 @@
           "dpr": 3
         },
         "docWidth": 430,
-        "docHeight": 3126,
+        "docHeight": 4856,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -223,45 +247,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
-            739
+            64,
+            749
           ],
           [
-            811,
-            713
+            813,
+            75
           ],
           [
-            1524,
-            739
+            888,
+            940
           ],
           [
-            2311,
+            1828,
+            1584
+          ],
+          [
+            3412,
+            268
+          ],
+          [
+            3720,
             223
           ],
           [
-            2582,
-            223
+            3982,
+            242
           ],
           [
-            2804,
-            144
+            4280,
+            481
           ],
           [
-            2948,
-            130
+            4761,
+            47
+          ],
+          [
+            694,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -297,7 +333,7 @@
           "dpr": 2.625
         },
         "docWidth": 412,
-        "docHeight": 3306,
+        "docHeight": 4927,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -312,45 +348,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
+            64,
             839
           ],
           [
-            911,
-            711
+            903,
+            75
           ],
           [
-            1622,
-            839
+            978,
+            940
           ],
           [
-            2509,
+            1918,
+            1584
+          ],
+          [
+            3502,
+            268
+          ],
+          [
+            3810,
             213
           ],
           [
-            2770,
-            213
+            4063,
+            232
           ],
           [
-            2984,
-            144
+            4351,
+            481
           ],
           [
-            3128,
-            130
+            4832,
+            47
+          ],
+          [
+            794,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -386,7 +434,7 @@
           "dpr": 3
         },
         "docWidth": 360,
-        "docHeight": 3208,
+        "docHeight": 4831,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -401,45 +449,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
+            64,
             780
           ],
           [
-            852,
-            711
+            844,
+            75
           ],
           [
-            1563,
-            780
+            919,
+            940
           ],
           [
-            2391,
+            1859,
+            1584
+          ],
+          [
+            3443,
+            268
+          ],
+          [
+            3751,
             185
           ],
           [
-            2624,
-            185
+            3976,
+            203
           ],
           [
-            2808,
-            204
+            4234,
+            481
           ],
           [
-            3012,
-            148
+            4715,
+            68
+          ],
+          [
+            735,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -475,7 +535,7 @@
           "dpr": 2
         },
         "docWidth": 768,
-        "docHeight": 3910,
+        "docHeight": 5133,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -490,45 +550,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
+            64,
             1024
           ],
           [
-            1096,
-            535
+            1088,
+            82
           ],
           [
-            1631,
-            1024
+            1170,
+            667
           ],
           [
-            2703,
+            1837,
+            1584
+          ],
+          [
+            3421,
+            189
+          ],
+          [
+            3650,
             405
           ],
           [
-            3156,
-            405
+            4095,
+            432
           ],
           [
-            3561,
-            171
+            4588,
+            476
           ],
           [
-            3732,
-            130
+            5064,
+            21
+          ],
+          [
+            979,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -564,7 +636,7 @@
           "dpr": 3
         },
         "docWidth": 734,
-        "docHeight": 2923,
+        "docHeight": 4849,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -579,45 +651,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
-            768
+            64,
+            800
           ],
           [
-            840,
-            529
+            864,
+            80
           ],
           [
-            1369,
-            343
+            944,
+            661
           ],
           [
-            1760,
+            1606,
+            1584
+          ],
+          [
+            3190,
+            183
+          ],
+          [
+            3413,
             386
           ],
           [
-            2194,
-            386
+            3839,
+            413
           ],
           [
-            2580,
-            165
+            4311,
+            469
           ],
           [
-            2745,
-            130
+            4780,
+            21
+          ],
+          [
+            298,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -653,7 +737,7 @@
           "dpr": 1
         },
         "docWidth": 1440,
-        "docHeight": 5883,
+        "docHeight": 6472,
         "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
         "hasBreakpoints": true,
         "hasReducedMotion": true,
@@ -668,45 +752,57 @@
           "webglContexts": 1
         },
         "counts": {
-          "tapTargets": 13,
+          "tapTargets": 14,
           "tiny": 0,
           "smallText": 0,
           "canvases": 1,
-          "images": 1,
-          "fixed": 1
+          "images": 4,
+          "fixed": 2
         },
         "sections": [
           [
             0,
-            72
+            64
           ],
           [
-            72,
+            64,
             900
           ],
           [
-            972,
-            401
+            964,
+            96
           ],
           [
-            1373,
+            1060,
+            507
+          ],
+          [
+            1567,
             2700
           ],
           [
-            4121,
+            4267,
+            269
+          ],
+          [
+            4576,
             648
           ],
           [
-            4817,
+            5264,
             648
           ],
           [
-            5465,
-            240
+            6028,
+            375
           ],
           [
-            5705,
-            130
+            6403,
+            21
+          ],
+          [
+            855,
+            45
           ]
         ],
         "cssUnreadable": 0
@@ -718,5 +814,5 @@
   ],
   "totals": {},
   "uniqueIssues": [],
-  "durationMs": 38744
+  "durationMs": 38449
 }

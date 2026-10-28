@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <a href="https://kp6801-ai.github.io/phonefix/"><img src="landing/assets/demo.gif" width="900" alt="Nine-second demo: a laptop showing the page as the AI built it, with a GSAP pinned marquee and a rotating Three.js knot, next to an iPhone showing the same page after phonefix, both scrolling in sync"></a>
+  <a href="https://kp6801-ai.github.io/phonefix/"><img src="landing/assets/demo.gif" width="900" alt="Ten-second demo: a laptop showing the page as the AI built it, with a GSAP pinned marquee and a rotating Three.js knot, next to an iPhone showing the same page after phonefix, both scrolling in sync"></a>
 </p>
 
 <p align="center"><sub>Left: the page as your AI saw it at 1440px, GSAP ScrollTrigger pin and Three.js scene running. Right: the same page after phonefix on an iPhone, same desktop design, zero issues. <a href="https://kp6801-ai.github.io/phonefix/examples/report/report.html">Open the demo report</a>.</sub></p>

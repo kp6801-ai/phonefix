@@ -7,7 +7,7 @@
       "dpr": 2.625
     },
     "docWidth": 412,
-    "docHeight": 3306,
+    "docHeight": 4927,
     "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
     "hasBreakpoints": true,
     "hasReducedMotion": true,
@@ -22,45 +22,57 @@
       "webglContexts": 1
     },
     "counts": {
-      "tapTargets": 13,
+      "tapTargets": 14,
       "tiny": 0,
       "smallText": 0,
       "canvases": 1,
-      "images": 1,
-      "fixed": 1
+      "images": 4,
+      "fixed": 2
     },
     "sections": [
       [
         0,
-        72
+        64
       ],
       [
-        72,
+        64,
         839
       ],
       [
-        911,
-        711
+        903,
+        75
       ],
       [
-        1622,
-        839
+        978,
+        940
       ],
       [
-        2509,
+        1918,
+        1584
+      ],
+      [
+        3502,
+        268
+      ],
+      [
+        3810,
         213
       ],
       [
-        2770,
-        213
+        4063,
+        232
       ],
       [
-        2984,
-        144
+        4351,
+        481
       ],
       [
-        3128,
-        130
+        4832,
+        47
+      ],
+      [
+        794,
+        45
       ]
     ],
     "cssUnreadable": 0
