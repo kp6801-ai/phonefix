@@ -61,7 +61,7 @@
   /* hero */
   .hero { padding:clamp(40px, 7vw, 96px) 0 clamp(40px, 6vw, 80px); background:var(--bg); overflow-x:clip; }
   .hero .grid { display:grid; gap:clamp(28px, 5vw, 64px); align-items:center; }
-  @media (min-width:980px) { .hero .grid { grid-template-columns:1.25fr .75fr; } }
+  @media (min-width:980px) { .hero .grid { grid-template-columns:1fr 1.1fr; } }
   .hero p.lead { font-size:clamp(17px, 2vw, 22px); max-width:620px; color:var(--ink-soft); margin:20px 0 28px; }
   .cmd { display:flex; align-items:center; gap:10px; background:var(--ink); color:var(--lime); border-radius:100px; padding:4px 4px 4px 18px; font-family:var(--m); font-size:clamp(13px, 1.6vw, 15px); max-width:100%; }
   .cmd code { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; min-width:0; flex:1; }
@@ -71,6 +71,10 @@
   .agents { display:flex; flex-wrap:wrap; gap:8px 14px; margin-top:28px; font-family:var(--m); font-size:12px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); }
   .agents span::before { content:'● '; color:var(--ink); }
 
+.demo-video[hidden] { display:none; }
+  .demo-video { border:4px solid var(--ink); border-radius:var(--r); overflow:hidden; background:var(--ink); box-shadow:0 24px 60px -24px rgba(11,11,12,.5); }
+  .demo-video video { width:100%; height:auto; display:block; aspect-ratio:16/9; }
+  .phones[hidden] { display:none; }
   /* phones */
   .phones { display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px, 3vw, 28px); justify-items:center; }
   .phone { width:100%; max-width:230px; }
@@ -167,18 +171,19 @@
       <div class="agents"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Copilot</span><span>Gemini CLI</span></div>
     </div>
     <div>
-      <div class="phones">
+      <div class="demo-video"><video autoplay muted loop playsinline preload="metadata" poster="assets/demo-poster.jpg" width="1280" height="720" aria-label="Nine-second demo: the page as the AI built it on a laptop, with GSAP pin and Three.js scene, next to the same page after phonefix on an iPhone"><source src="assets/demo.mp4" type="video/mp4"></video></div>
+      <div class="phones" id="phones" hidden>
         <div class="phone">
-          <div class="frame" id="frame-before"><img src="assets/before-iphone-se.jpg" width="750" height="1334" alt="Laptop-only page on iPhone SE: navigation clipped, 3D canvas pushed off-screen, empty hero" loading="eager" decoding="async"></div>
+          <div class="frame" id="frame-before"><img src="assets/before-iphone-se.jpg" width="750" height="1334" alt="Laptop-only page on iPhone SE: navigation clipped, 3D canvas pushed off-screen, empty hero" loading="lazy" decoding="async"></div>
           <div class="cap"><span class="tag bad">Before</span><span class="label">iPhone SE</span></div>
         </div>
         <div class="phone">
-          <div class="frame" id="frame-after"><img src="assets/after-iphone-se.jpg" width="750" height="1334" alt="Same page after phonefix: fluid layout, 44px controls, canvas sized to the screen, safe-area bar" loading="eager" decoding="async"></div>
+          <div class="frame" id="frame-after"><img src="assets/after-iphone-se.jpg" width="750" height="1334" alt="Same page after phonefix: fluid layout, 44px controls, canvas sized to the screen, safe-area bar" loading="lazy" decoding="async"></div>
           <div class="cap"><span class="tag good">After</span><span class="label">iPhone SE</span></div>
         </div>
       </div>
       <div class="live-row"><button class="btn ghost" type="button" id="play-live">Play the live demo</button></div>
-      <p class="phones-note">Same page, same desktop design. Fifteen issues before, zero after.</p>
+      <p class="phones-note">Left: what your AI saw at 1440px. Right: what phonefix shipped on an iPhone. Same desktop design, fifteen issues to zero.</p>
     </div>
   </div>
 </header>
@@ -325,6 +330,7 @@ git clone https://github.com/kp6801-ai/phonefix ~/.claude/skills/phonefix</code>
   if (/github\.io$/.test(location.hostname)) fetch('https://api.github.com/repos/kp6801-ai/phonefix').then(r => r.ok ? r.json() : null).then(j => { if (j && typeof j.stargazers_count === 'number') document.getElementById('stars').textContent = '★ ' + j.stargazers_count.toLocaleString(); }).catch(() => {});
   // live demo: swap static shots for iframes (opt-in so visitors' phones do not run two WebGL scenes by default)
   document.getElementById('play-live').addEventListener('click', (e) => {
+    document.querySelector('.demo-video').hidden = true; document.getElementById('phones').hidden = false;
     const mk = (src) => { const f = document.createElement('iframe'); f.src = src; f.title = 'live demo'; f.loading = 'lazy'; return f; };
     document.getElementById('frame-before').replaceChildren(mk('examples/laptop-only/'));
     document.getElementById('frame-after').replaceChildren(mk('examples/fixed/'));

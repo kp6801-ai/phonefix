@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Landing page and demo
+    url: https://kp6801-ai.github.io/phonefix/
+    about: See what phonefix does before filing.
+  - name: Security report
+    url: https://github.com/kp6801-ai/phonefix/blob/main/SECURITY.md
+    about: Email, do not open a public issue.

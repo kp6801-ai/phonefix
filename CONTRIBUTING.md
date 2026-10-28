@@ -40,4 +40,6 @@ Zero severity-3/4 issues or the change does not ship.
 
 ## Pull requests
 
+`main` is protected: no direct pushes, no force pushes, one approving review from SPIKE Studio, conversations resolved. By opening a PR you agree your contribution is released under the MIT license of this repo.
+
 Small, one topic each. Describe the phone behaviour you saw and the device. Screenshots welcome.

@@ -1,0 +1,22 @@
+name: Bug
+description: A check is wrong, a script fails, or a fix made a phone worse.
+labels: [bug]
+body:
+  - type: input
+    id: agent
+    attributes: { label: Agent, placeholder: Claude Code 2.x / Cursor / Codex / Windsurf / Copilot / Gemini CLI }
+    validations: { required: true }
+  - type: input
+    id: stack
+    attributes: { label: Stack, placeholder: Next 15 + Tailwind + GSAP }
+    validations: { required: true }
+  - type: textarea
+    id: what
+    attributes: { label: What happened, description: Paste the capture.mjs console summary or the relevant checks.json issue. }
+    validations: { required: true }
+  - type: textarea
+    id: expected
+    attributes: { label: What you expected }
+  - type: input
+    id: device
+    attributes: { label: Device where you saw it, placeholder: iPhone SE emulated / real Pixel 7 }

@@ -1,0 +1,23 @@
+name: New check
+description: Propose a mobile defect phonefix should detect.
+labels: [check]
+body:
+  - type: input
+    id: name
+    attributes: { label: Check id, placeholder: kebab-case, e.g. sticky-header-tall }
+    validations: { required: true }
+  - type: textarea
+    id: why
+    attributes: { label: What the user sees on a phone }
+    validations: { required: true }
+  - type: textarea
+    id: detect
+    attributes: { label: How to detect it from the DOM or CSSOM }
+    validations: { required: true }
+  - type: textarea
+    id: fix
+    attributes: { label: The fix, in CSS or JS }
+  - type: dropdown
+    id: severity
+    attributes: { label: Severity, options: ["4 breaks the page", "3 clearly wrong", "2 should fix", "1 nice to have"] }
+    validations: { required: true }
