@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- phonefix demo: the same Nimbus page after running the skill. Desktop design unchanged. -->
+<title>Nimbus — Cloud notes for fast teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0b0b0c; --paper:#faf8f3; --accent:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; --tap:44px; }
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body { margin:0; font-family:'Funnel Sans',sans-serif; color:var(--ink); background:var(--paper); font-size:16px; }
+  h1,h2,h3 { font-family:'Funnel Display',sans-serif; letter-spacing:-.03em; line-height:.96; margin:0; }
+
+  /* FIX overflow root cause: fluid container (1200px on desktop, 100% on phones) */
+  .wrap { width:min(1200px, 100%); margin:0 auto; padding:0 clamp(16px, 4vw, 24px); }
+
+  nav { display:flex; align-items:center; justify-content:space-between; min-height:72px; gap:12px; }
+  nav .logo { font-family:'Funnel Display'; font-weight:800; font-size:24px; }
+  nav ul { list-style:none; display:flex; gap:clamp(8px, 2vw, 28px); margin:0; padding:0; align-items:center; }
+  nav li { position:relative; }
+  /* FIX tap targets: 44px min height via padding */
+  nav a, nav .menu-btn { display:inline-flex; align-items:center; min-height:var(--tap); padding:0 6px; color:var(--ink); text-decoration:none; font-size:15px; background:none; border:0; font-family:inherit; cursor:pointer; }
+  /* FIX hover-only menu → tap toggle with aria-expanded; hover kept for fine pointers only */
+  nav .menu { display:none; position:absolute; top:100%; left:0; background:#fff; border:1.5px solid var(--ink); border-radius:12px; padding:8px; width:200px; z-index:5; }
+  nav li.open .menu { display:block; }
+  @media (hover:hover) and (pointer:fine) { nav li:hover .menu { display:block; } }
+  nav .menu a { display:flex; padding:0 10px; min-height:var(--tap); font-size:15px; }
+  /* FIX 24px icon buttons: glyph stays small, hit area 44px */
+  .icon-btn { width:var(--tap); height:var(--tap); display:inline-grid; place-items:center; border:0; background:none; cursor:pointer; padding:0; font-family:inherit; }
+  .icon-btn span { width:24px; height:24px; border:1.5px solid var(--ink); border-radius:50%; background:#fff; font-size:12px; display:grid; place-items:center; }
+  @media (max-width:640px) { nav ul li:nth-child(3) { display:none; } }
+
+  /* FIX 100vh → svh with fallback; grid collapses on phones */
+  .hero { min-height:100vh; min-height:100svh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:clamp(24px, 4vw, 48px); padding:24px 0; }
+  .hero h1 { font-size:clamp(40px, 9vw, 88px); }
+  .hero p { font-size:clamp(16px, 2vw, 18px); color:var(--mute); max-width:520px; }
+  .cta { display:inline-flex; align-items:center; min-height:48px; background:var(--ink); color:var(--lime); padding:0 28px; border-radius:100px; text-decoration:none; font-weight:600; margin-top:24px; }
+  @media (hover:hover) and (pointer:fine) { .cta:hover { background:var(--accent); color:var(--ink); } }
+  .cta:active, .cta:focus-visible { background:var(--accent); color:var(--ink); outline:2px solid var(--ink); outline-offset:2px; }
+  /* FIX fixed 560px canvas → sized by container, square, scrolls the page over it */
+  .scene-wrap { width:min(560px, 100%); aspect-ratio:1/1; justify-self:center; }
+  #scene { width:100%; height:100%; display:block; border-radius:22px; background:var(--ink); touch-action:pan-y; }
+  @media (max-width:860px) { .hero { grid-template-columns:1fr; } .scene-wrap { width:min(420px, 100%); } }
+
+  /* FIX fixed 3×380px grid → auto-fit fluid; 12px copy → 16px */
+  .features { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap:24px; padding:clamp(48px, 8vw, 96px) 0; }
+  .card { background:#fffdf9; border:1.5px solid var(--ink); border-radius:22px; padding:28px; }
+  .card h3 { font-size:clamp(24px, 3vw, 28px); margin-bottom:12px; }
+  .card p { font-size:16px; color:var(--mute); line-height:1.5; }
+  /* FIX hover-revealed "Learn more" → always visible on touch, hover reveal only for fine pointers */
+  .card .more { opacity:1; font-size:14px; }
+  @media (hover:hover) and (pointer:fine) { .card .more { opacity:0; transition:opacity .2s; } .card:hover .more { opacity:1; } }
+
+  /* FIX pinned story: fits the smallest viewport; pin only on desktop (see JS) */
+  .story { position:relative; }
+  .story .pin { min-height:100vh; min-height:100svh; display:flex; align-items:center; justify-content:center; background:var(--ink); color:var(--paper); overflow-x:clip; /* pinned container only, never body */ }
+  .story .pin h2 { font-size:clamp(36px, 8vw, 120px); white-space:nowrap; padding:0 16px; }
+  @media (min-width:861px) { .story { height:300vh; } .story .pin { height:100vh; height:100svh; } }
+
+  /* FIX image: fluid, intrinsic size, lazy */
+  .shot { width:100%; max-width:1600px; height:auto; display:block; margin:48px 0; border-radius:22px; }
+  video { width:100%; max-width:1152px; height:auto; border-radius:22px; display:block; margin:0 auto; background:var(--ink); }
+
+  /* FIX inputs 16px, submit 48px tall, wraps on phones */
+  form { display:flex; flex-wrap:wrap; gap:12px; padding:clamp(48px, 8vw, 96px) 0; }
+  input { font-size:16px; min-height:48px; padding:0 18px; border:1.5px solid var(--ink); border-radius:100px; flex:1 1 240px; max-width:360px; font-family:inherit; min-width:0; }
+  button[type=submit] { font-size:16px; min-height:48px; padding:0 22px; border-radius:100px; border:0; background:var(--ink); color:var(--lime); font-family:inherit; }
+
+  /* FIX fixed bar: safe-area padding, body gets matching bottom space */
+  .bar { position:fixed; bottom:0; left:0; right:0; background:var(--accent); padding:12px 16px calc(12px + env(safe-area-inset-bottom)); font-size:14px; text-align:center; }
+  body { padding-bottom:calc(48px + env(safe-area-inset-bottom)); }
+  footer { padding:64px 0 48px; font-size:14px; color:var(--mute); }
+  #start { scroll-margin-top:16px; }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo">Nimbus</div>
+    <ul>
+      <li><button class="menu-btn" aria-expanded="false" aria-controls="product-menu">Product ▾</button>
+        <div class="menu" id="product-menu"><a href="#">Notes</a><a href="#">Boards</a><a href="#">Sync</a></div>
+      </li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><button class="icon-btn" aria-label="Search"><span>⌕</span></button></li>
+      <li><button class="icon-btn" aria-label="Theme"><span>◐</span></button></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>Notes that move as fast as you do.</h1>
+      <p>Capture, link and share ideas across your whole team. Nimbus syncs in the background so you never wait.</p>
+      <a class="cta" href="#start">Start free</a>
+    </div>
+    <div class="scene-wrap"><canvas id="scene" aria-label="Rotating 3D knot"></canvas></div>
+  </section>
+
+  <section class="features">
+    <div class="card"><h3>Instant sync</h3><p>Every keystroke lands on every device before you lift your finger. Offline edits merge without conflicts.</p><a class="more" href="#">Learn more →</a></div>
+    <div class="card"><h3>Linked thinking</h3><p>Backlinks, graph view and daily notes. Ideas find each other.</p><a class="more" href="#">Learn more →</a></div>
+    <div class="card"><h3>Team spaces</h3><p>Shared boards with roles, comments and version history.</p><a class="more" href="#">Learn more →</a></div>
+  </section>
+
+  <section class="story">
+    <div class="pin"><h2 class="marquee">Write once. Read everywhere.</h2></div>
+  </section>
+
+  <img class="shot" src="https://picsum.photos/seed/nimbus/1600/900" srcset="https://picsum.photos/seed/nimbus/800/450 800w, https://picsum.photos/seed/nimbus/1600/900 1600w" sizes="(max-width: 1200px) 100vw, 1200px" width="1600" height="900" loading="lazy" decoding="async" alt="Nimbus app screenshot">
+
+  <video autoplay muted loop playsinline preload="metadata" poster="https://picsum.photos/seed/nimbus-poster/1152/648" src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+
+  <form id="start">
+    <input type="email" inputmode="email" enterkeyhint="go" autocomplete="email" placeholder="Work email" aria-label="Work email">
+    <button type="submit">Get access</button>
+  </form>
+
+  <footer>© Nimbus Labs · Built for the desk, fixed for the thumb.</footer>
+</div>
+<div class="bar">Nimbus 2.0 is here — read the changelog</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  // Menu: tap toggle (hover still works on fine pointers via CSS)
+  document.querySelectorAll('.menu-btn').forEach(btn => btn.addEventListener('click', () => {
+    const li = btn.closest('li'); const open = li.classList.toggle('open'); btn.setAttribute('aria-expanded', String(open));
+  }));
+  document.addEventListener('click', e => { if (!e.target.closest('nav li')) document.querySelectorAll('nav li.open').forEach(li => { li.classList.remove('open'); li.querySelector('.menu-btn').setAttribute('aria-expanded', 'false'); }); });
+
+  gsap.registerPlugin(ScrollTrigger);
+  ScrollTrigger.config({ ignoreMobileResize: true });
+  const mm = gsap.matchMedia();
+  mm.add({ isDesktop: '(min-width: 861px)', isMobile: '(max-width: 860px)', reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
+    const { isDesktop, reduce } = ctx.conditions;
+    if (reduce) { gsap.set('.card', { clearProps: 'all' }); return; }
+    // Marquee: pinned scrub on desktop; on phones the heading simply wraps and fades in.
+    if (isDesktop) {
+      gsap.to('.marquee', {
+        x: () => -(document.querySelector('.marquee').scrollWidth - window.innerWidth + 32),
+        ease: 'none',
+        scrollTrigger: { trigger: '.story', start: 'top top', end: 'bottom bottom', scrub: true, pin: '.pin', anticipatePin: 1, invalidateOnRefresh: true }
+      });
+    } else {
+      gsap.from('.marquee', { opacity: 0, y: 24, duration: .8, scrollTrigger: { trigger: '.story', start: 'top 70%' } });
+    }
+    gsap.from('.card', { y: 40, opacity: 0, stagger: 0.12, duration: .7, scrollTrigger: { trigger: '.features', start: 'top 75%' } });
+  });
+  document.fonts.ready.then(() => ScrollTrigger.refresh());
+</script>
+<script type="module">
+  import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js';
+  window.__THREE__ = THREE.REVISION;
+  const canvas = document.getElementById('scene');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const lite = matchMedia('(pointer: coarse)').matches || (navigator.hardwareConcurrency || 8) <= 4;
+  const dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2);
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: dpr < 2, powerPreference: 'low-power' });
+  renderer.setPixelRatio(dpr);
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 100); cam.position.z = 4;
+  const geo = new THREE.TorusKnotGeometry(1, 0.32, lite ? 96 : 180, lite ? 12 : 24);
+  const mat = new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 0.4, roughness: 0.3 });
+  const knot = new THREE.Mesh(geo, mat); scene.add(knot);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const light = new THREE.DirectionalLight(0xc8f25c, 2); light.position.set(3, 4, 5); scene.add(light);
+  const render = () => renderer.render(scene, cam);
+  const resize = () => { const { width, height } = canvas.getBoundingClientRect(); renderer.setSize(width, height, false); cam.aspect = width / height; cam.updateProjectionMatrix(); render(); };
+  new ResizeObserver(resize).observe(canvas.parentElement); resize();
+  let visible = true, running = true;
+  const loop = () => { if (!running) return; if (visible && !document.hidden) { knot.rotation.x += 0.006; knot.rotation.y += 0.009; render(); } requestAnimationFrame(loop); };
+  new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.05 }).observe(canvas);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && running) render(); });
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); running = false; });
+  canvas.addEventListener('webglcontextrestored', () => { running = true; resize(); loop(); });
+  if (reduce) render(); else loop();
+</script>
+</body>
+</html>

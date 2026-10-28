@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Spike">
+<g stroke="#0b0b0c" stroke-width="14" stroke-linejoin="miter" stroke-miterlimit="12">
+<polygon points="500.0,295.0 604.6,41.8 588.9,315.3" fill="#d9b43a"/>
+<polygon points="588.9,315.3 793.0,132.5 660.3,372.2" fill="#d9b43a"/>
+<polygon points="660.3,372.2 923.5,296.1 699.9,454.4" fill="#d9b43a"/>
+<polygon points="699.9,454.4 970.0,500.0 699.9,545.6" fill="#d9b43a"/>
+<polygon points="699.9,545.6 923.5,703.9 660.3,627.8" fill="#d9b43a"/>
+<polygon points="660.3,627.8 793.0,867.5 588.9,684.7" fill="#d9b43a"/>
+<polygon points="588.9,684.7 604.6,958.2 500.0,705.0" fill="#d9b43a"/>
+<polygon points="500.0,705.0 395.4,958.2 411.1,684.7" fill="#d9b43a"/>
+<polygon points="411.1,684.7 207.0,867.5 339.7,627.8" fill="#d9b43a"/>
+<polygon points="339.7,627.8 76.5,703.9 300.1,545.6" fill="#d9b43a"/>
+<polygon points="300.1,545.6 30.0,500.0 300.1,454.4" fill="#d9b43a"/>
+<polygon points="300.1,454.4 76.5,296.1 339.7,372.2" fill="#d9b43a"/>
+<polygon points="339.7,372.2 207.0,132.5 411.1,315.3" fill="#d9b43a"/>
+<polygon points="411.1,315.3 395.4,41.8 500.0,295.0" fill="#d9b43a"/>
+<polygon points="454.4,300.1 500.0,30.0 545.6,300.1" fill="#ffd95a"/>
+<polygon points="545.6,300.1 703.9,76.5 627.8,339.7" fill="#ffd95a"/>
+<polygon points="627.8,339.7 867.5,207.0 684.7,411.1" fill="#ffd95a"/>
+<polygon points="684.7,411.1 958.2,395.4 705.0,500.0" fill="#ffd95a"/>
+<polygon points="705.0,500.0 958.2,604.6 684.7,588.9" fill="#ffd95a"/>
+<polygon points="684.7,588.9 867.5,793.0 627.8,660.3" fill="#ffd95a"/>
+<polygon points="627.8,660.3 703.9,923.5 545.6,699.9" fill="#ffd95a"/>
+<polygon points="545.6,699.9 500.0,970.0 454.4,699.9" fill="#ffd95a"/>
+<polygon points="454.4,699.9 296.1,923.5 372.2,660.3" fill="#ffd95a"/>
+<polygon points="372.2,660.3 132.5,793.0 315.3,588.9" fill="#ffd95a"/>
+<polygon points="315.3,588.9 41.8,604.6 295.0,500.0" fill="#ffd95a"/>
+<polygon points="295.0,500.0 41.8,395.4 315.3,411.1" fill="#ffd95a"/>
+<polygon points="315.3,411.1 132.5,207.0 372.2,339.7" fill="#ffd95a"/>
+<polygon points="372.2,339.7 296.1,76.5 454.4,300.1" fill="#ffd95a"/>
+<circle cx="500.0" cy="500.0" r="250" fill="#ffd95a"/>
+</g>
+<rect x="333.3" y="412.5" width="333.3" height="108.3" rx="54.2" fill="#0b0b0c"/>
+<rect x="385.4" y="451.0" width="70.8" height="31.2" rx="15.6" fill="#faf8f3"/>
+<rect x="543.8" y="451.0" width="70.8" height="31.2" rx="15.6" fill="#faf8f3"/>
+</svg>

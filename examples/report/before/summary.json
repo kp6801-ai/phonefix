@@ -1,0 +1,1905 @@
+{
+  "label": "before",
+  "origin": "examples/laptop-only",
+  "generatedAt": "2026-10-28T21:52:58.288Z",
+  "devices": [
+    {
+      "id": "iphone-se",
+      "name": "iPhone SE (2nd/3rd gen)",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "dpr": 2,
+      "dir": "before/iphone-se",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 980,
+          "h": 1743,
+          "dpr": 0.7653061151504517
+        },
+        "docWidth": 1624,
+        "docHeight": 9449,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            1743
+          ],
+          [
+            1815,
+            357
+          ],
+          [
+            2172,
+            5229
+          ],
+          [
+            7449,
+            900
+          ],
+          [
+            8397,
+            648
+          ],
+          [
+            9045,
+            230
+          ],
+          [
+            9275,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +203px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +203px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 6,
+        "4": 2
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "iphone-15",
+      "name": "iPhone 15",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 393,
+        "height": 659
+      },
+      "dpr": 3,
+      "dir": "before/iphone-15",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 980,
+          "h": 1643,
+          "dpr": 1.2030612230300903
+        },
+        "docWidth": 1624,
+        "docHeight": 9046,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            1643
+          ],
+          [
+            1715,
+            357
+          ],
+          [
+            2072,
+            4929
+          ],
+          [
+            7049,
+            900
+          ],
+          [
+            7997,
+            648
+          ],
+          [
+            8645,
+            230
+          ],
+          [
+            8874,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +203px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +203px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 6,
+        "4": 2
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "iphone-15-pro-max",
+      "name": "iPhone 15 Pro Max",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 430,
+        "height": 739
+      },
+      "dpr": 3,
+      "dir": "before/iphone-15-pro-max",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 980,
+          "h": 1684,
+          "dpr": 1.3163264989852905
+        },
+        "docWidth": 1624,
+        "docHeight": 9212,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            1684
+          ],
+          [
+            1756,
+            357
+          ],
+          [
+            2113,
+            5052
+          ],
+          [
+            7213,
+            900
+          ],
+          [
+            8161,
+            648
+          ],
+          [
+            8809,
+            230
+          ],
+          [
+            9038,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +203px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +203px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 6,
+        "4": 2
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "pixel-7",
+      "name": "Pixel 7",
+      "route": "/",
+      "browser": "chromium",
+      "guard": false,
+      "viewport": {
+        "width": 412,
+        "height": 839
+      },
+      "dpr": 2.625,
+      "dir": "before/pixel-7",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 1624,
+          "h": 3308,
+          "dpr": 2.625
+        },
+        "docWidth": 1624,
+        "docHeight": 10456,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            1995
+          ],
+          [
+            2067,
+            356
+          ],
+          [
+            2423,
+            5985
+          ],
+          [
+            8456,
+            900
+          ],
+          [
+            9404,
+            648
+          ],
+          [
+            10052,
+            229
+          ],
+          [
+            10281,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 88×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "canvas-dpr",
+          "category": "3d",
+          "severity": 3,
+          "selector": "#scene",
+          "detail": "Canvas backing store is 1470×1470 for a 560×560 CSS box (ratio 2.63, device DPR 2.625) — Three.js renders 7× the pixels a phone can show.",
+          "fix": "renderer.setPixelRatio(Math.min(devicePixelRatio, 2)) — 1.5 on pointer:coarse or hardwareConcurrency<=4; size the canvas from its container with ResizeObserver."
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 7,
+        "4": 1
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "galaxy-s23",
+      "name": "Galaxy S23",
+      "route": "/",
+      "browser": "chromium",
+      "guard": false,
+      "viewport": {
+        "width": 360,
+        "height": 780
+      },
+      "dpr": 3,
+      "dir": "before/galaxy-s23",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 1440,
+          "h": 3120,
+          "dpr": 3
+        },
+        "docWidth": 1624,
+        "docHeight": 10968,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            2123
+          ],
+          [
+            2195,
+            356
+          ],
+          [
+            2551,
+            6369
+          ],
+          [
+            8968,
+            900
+          ],
+          [
+            9916,
+            648
+          ],
+          [
+            10564,
+            229
+          ],
+          [
+            10793,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1624px wide on a 1440px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +184px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 88×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "canvas-dpr",
+          "category": "3d",
+          "severity": 3,
+          "selector": "#scene",
+          "detail": "Canvas backing store is 1680×1680 for a 560×560 CSS box (ratio 3.00, device DPR 3) — Three.js renders 9× the pixels a phone can show.",
+          "fix": "renderer.setPixelRatio(Math.min(devicePixelRatio, 2)) — 1.5 on pointer:coarse or hardwareConcurrency<=4; size the canvas from its container with ResizeObserver."
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 7,
+        "4": 2
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "ipad",
+      "name": "iPad (portrait)",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "dpr": 2,
+      "dir": "before/ipad",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 980,
+          "h": 1306,
+          "dpr": 1.5673469305038452
+        },
+        "docWidth": 1624,
+        "docHeight": 7704,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            1307
+          ],
+          [
+            1379,
+            357
+          ],
+          [
+            1736,
+            3921
+          ],
+          [
+            5705,
+            900
+          ],
+          [
+            6653,
+            648
+          ],
+          [
+            7301,
+            230
+          ],
+          [
+            7531,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +202px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +202px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 6,
+        "4": 2
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "iphone-15-landscape",
+      "name": "iPhone 15 landscape",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 734,
+        "height": 343
+      },
+      "dpr": 3,
+      "dir": "before/iphone-15-landscape",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 980,
+          "h": 457,
+          "dpr": 2.246938705444336
+        },
+        "docWidth": 1624,
+        "docHeight": 4308,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            458
+          ],
+          [
+            530,
+            357
+          ],
+          [
+            887,
+            1374
+          ],
+          [
+            2309,
+            900
+          ],
+          [
+            3257,
+            648
+          ],
+          [
+            3905,
+            230
+          ],
+          [
+            4134,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "viewport-missing",
+          "category": "viewport",
+          "severity": 4,
+          "selector": "head",
+          "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+          "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+        },
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +203px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +203px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        },
+        {
+          "id": "fixed-width-rules",
+          "category": "layout",
+          "severity": 3,
+          "selector": ".wrap",
+          "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+          "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+        },
+        {
+          "id": "no-breakpoints",
+          "category": "layout",
+          "severity": 3,
+          "selector": "stylesheets",
+          "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+          "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+        },
+        {
+          "id": "input-font",
+          "category": "forms",
+          "severity": 3,
+          "selector": "#start > input:nth-child(1)",
+          "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+          "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+        },
+        {
+          "id": "tap-targets",
+          "category": "touch",
+          "severity": 3,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+          "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+          "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+        },
+        {
+          "id": "hover-only",
+          "category": "touch",
+          "severity": 3,
+          "selector": "nav li:hover .menu",
+          "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+          "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+        },
+        {
+          "id": "video-attrs",
+          "category": "media",
+          "severity": 3,
+          "selector": "div.wrap > video:nth-child(6)",
+          "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+          "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+        },
+        {
+          "id": "canvas-dpr",
+          "category": "3d",
+          "severity": 3,
+          "selector": "#scene",
+          "detail": "Canvas backing store is 1258×1258 for a 560×560 CSS box (ratio 2.25, device DPR 2.246938705444336) — Three.js renders 5× the pixels a phone can show.",
+          "fix": "renderer.setPixelRatio(Math.min(devicePixelRatio, 2)) — 1.5 on pointer:coarse or hardwareConcurrency<=4; size the canvas from its container with ResizeObserver."
+        },
+        {
+          "id": "tiny-text",
+          "category": "type",
+          "severity": 2,
+          "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+          "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+          "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+        },
+        {
+          "id": "vh-units",
+          "category": "layout",
+          "severity": 2,
+          "selector": ".hero",
+          "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+          "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+        },
+        {
+          "id": "safe-area",
+          "category": "layout",
+          "severity": 2,
+          "selector": "div.bar",
+          "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+          "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+        },
+        {
+          "id": "img-srcset",
+          "category": "media",
+          "severity": 2,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+          "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+        },
+        {
+          "id": "reduced-motion",
+          "category": "motion",
+          "severity": 2,
+          "selector": "stylesheets",
+          "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+          "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+        },
+        {
+          "id": "body-font",
+          "category": "type",
+          "severity": 1,
+          "selector": "body",
+          "detail": "body font-size 15px — readable but tight on phones",
+          "fix": "Prefer 16px base below 768px."
+        },
+        {
+          "id": "st-mobile-config",
+          "category": "motion",
+          "severity": 1,
+          "selector": "ScrollTrigger",
+          "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+          "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+        }
+      ],
+      "counts": {
+        "1": 2,
+        "2": 5,
+        "3": 7,
+        "4": 2
+      },
+      "cssUnreadable": []
+    },
+    {
+      "id": "desktop",
+      "name": "Desktop guard 1440",
+      "route": "/",
+      "browser": "chromium",
+      "guard": true,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1,
+      "dir": "before/desktop",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 1440,
+          "h": 900,
+          "dpr": 1
+        },
+        "docWidth": 1744,
+        "docHeight": 6076,
+        "viewportMeta": null,
+        "hasBreakpoints": false,
+        "hasReducedMotion": false,
+        "hasSafeArea": false,
+        "hasHoverMQ": false,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 10,
+          "tiny": 5,
+          "smallText": 2,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            900
+          ],
+          [
+            972,
+            356
+          ],
+          [
+            1328,
+            2700
+          ],
+          [
+            4076,
+            900
+          ],
+          [
+            5024,
+            648
+          ],
+          [
+            5672,
+            229
+          ],
+          [
+            5901,
+            175
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [
+        {
+          "id": "overflow-x",
+          "category": "layout",
+          "severity": 4,
+          "selector": "div.wrap > img.shot:nth-child(5)",
+          "detail": "Page is 1744px wide on a 1440px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +304px past edge)",
+          "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+        }
+      ],
+      "counts": {
+        "4": 1
+      },
+      "cssUnreadable": []
+    }
+  ],
+  "totals": {
+    "1": 14,
+    "2": 35,
+    "3": 45,
+    "4": 14
+  },
+  "uniqueIssues": [
+    {
+      "id": "viewport-missing",
+      "category": "viewport",
+      "severity": 4,
+      "selector": "head",
+      "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+      "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "overflow-x",
+      "category": "layout",
+      "severity": 4,
+      "selector": "div.wrap > img.shot:nth-child(5)",
+      "detail": "Page is 1624px wide on a 980px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +644px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) (380px wide, +232px past edge); div.wrap (1200px wide, +220px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > h3:nth-child(1) (321px wide, +203px past edge); div.wrap > section.features:nth-child(3) > div.card:nth-child(3) > p:nth-child(2) (321px wide, +203px past edge)",
+      "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape",
+        "desktop"
+      ]
+    },
+    {
+      "id": "fixed-width-rules",
+      "category": "layout",
+      "severity": 3,
+      "selector": ".wrap",
+      "detail": "4 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .shot { width:1600px }, video { width:1152px }",
+      "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "no-breakpoints",
+      "category": "layout",
+      "severity": 3,
+      "selector": "stylesheets",
+      "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+      "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes).",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "input-font",
+      "category": "forms",
+      "severity": 3,
+      "selector": "#start > input:nth-child(1)",
+      "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+      "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "tap-targets",
+      "category": "touch",
+      "severity": 3,
+      "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1)",
+      "detail": "5 interactive element(s) smaller than 44×44: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 44×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 31×18; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > button:nth-child(2) 91×30",
+      "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "hover-only",
+      "category": "touch",
+      "severity": 3,
+      "selector": "nav li:hover .menu",
+      "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+      "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "video-attrs",
+      "category": "media",
+      "severity": 3,
+      "selector": "div.wrap > video:nth-child(6)",
+      "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+      "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "canvas-dpr",
+      "category": "3d",
+      "severity": 3,
+      "selector": "#scene",
+      "detail": "Canvas backing store is 1470×1470 for a 560×560 CSS box (ratio 2.63, device DPR 2.625) — Three.js renders 7× the pixels a phone can show.",
+      "fix": "renderer.setPixelRatio(Math.min(devicePixelRatio, 2)) — 1.5 on pointer:coarse or hardwareConcurrency<=4; size the canvas from its container with ResizeObserver.",
+      "devices": [
+        "pixel-7",
+        "galaxy-s23",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "tiny-text",
+      "category": "type",
+      "severity": 2,
+      "selector": "div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+      "detail": "2 text element(s) under 12px: div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; div.wrap > nav:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px",
+      "fix": "Minimum 12px for labels/captions, 16px for body copy on phones.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "vh-units",
+      "category": "layout",
+      "severity": 2,
+      "selector": ".hero",
+      "detail": "2 rule(s) use 100vh: .hero { height:100vh }; .story .pin { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+      "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "safe-area",
+      "category": "layout",
+      "severity": 2,
+      "selector": "div.bar",
+      "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+      "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "img-srcset",
+      "category": "media",
+      "severity": 2,
+      "selector": "div.wrap > img.shot:nth-child(5)",
+      "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > img.shot:nth-child(5) 1600px — phones download desktop bytes.",
+      "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\".",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "reduced-motion",
+      "category": "motion",
+      "severity": 2,
+      "selector": "stylesheets",
+      "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+      "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "body-font",
+      "category": "type",
+      "severity": 1,
+      "selector": "body",
+      "detail": "body font-size 15px — readable but tight on phones",
+      "fix": "Prefer 16px base below 768px.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    },
+    {
+      "id": "st-mobile-config",
+      "category": "motion",
+      "severity": 1,
+      "selector": "ScrollTrigger",
+      "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+      "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS.",
+      "devices": [
+        "iphone-se",
+        "iphone-15",
+        "iphone-15-pro-max",
+        "pixel-7",
+        "galaxy-s23",
+        "ipad",
+        "iphone-15-landscape"
+      ]
+    }
+  ],
+  "durationMs": 56814
+}

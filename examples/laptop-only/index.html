@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- phonefix demo: deliberately laptop-only. No viewport meta on purpose. -->
+<title>Nimbus — Cloud notes for fast teams</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0b0b0c; --paper:#faf8f3; --accent:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Funnel Sans',sans-serif; color:var(--ink); background:var(--paper); font-size:15px; }
+  h1,h2,h3 { font-family:'Funnel Display',sans-serif; letter-spacing:-.03em; line-height:.96; margin:0; }
+
+  /* DEFECT: fixed-width container */
+  .wrap { width:1200px; margin:0 auto; padding:0 24px; }
+
+  nav { display:flex; align-items:center; justify-content:space-between; height:72px; }
+  nav .logo { font-family:'Funnel Display'; font-weight:800; font-size:24px; }
+  nav ul { list-style:none; display:flex; gap:28px; margin:0; padding:0; }
+  nav li { position:relative; }
+  nav a { color:var(--ink); text-decoration:none; font-size:14px; }
+  /* DEFECT: hover-only dropdown */
+  nav .menu { display:none; position:absolute; top:28px; left:0; background:#fff; border:1.5px solid var(--ink); border-radius:12px; padding:12px; width:200px; }
+  nav li:hover .menu { display:block; }
+  nav .menu a { display:block; padding:4px 0; font-size:13px; }
+  /* DEFECT: 24px icon buttons */
+  .icon-btn { width:24px; height:24px; border:1.5px solid var(--ink); border-radius:50%; background:#fff; font-size:11px; cursor:pointer; }
+
+  /* DEFECT: 100vh hero */
+  .hero { height:100vh; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:48px; }
+  .hero h1 { font-size:88px; }
+  .hero p { font-size:18px; color:var(--mute); max-width:520px; }
+  .cta { display:inline-block; background:var(--ink); color:var(--lime); padding:14px 28px; border-radius:100px; text-decoration:none; font-weight:600; margin-top:24px; }
+  .cta:hover { background:var(--accent); color:var(--ink); }
+  /* DEFECT: unbounded-DPR three.js canvas, hover-only tooltip */
+  #scene { width:560px; height:560px; display:block; border-radius:22px; background:var(--ink); }
+
+  /* DEFECT: 3-col grid fixed, 12px text */
+  .features { display:grid; grid-template-columns:repeat(3,380px); gap:24px; padding:96px 0; }
+  .card { background:#fffdf9; border:1.5px solid var(--ink); border-radius:22px; padding:28px; }
+  .card h3 { font-size:28px; margin-bottom:12px; }
+  .card p { font-size:12px; color:var(--mute); line-height:1.5; }
+  .card .more { opacity:0; transition:opacity .2s; font-size:11px; }
+  .card:hover .more { opacity:1; }
+
+  /* DEFECT: ScrollTrigger pin, desktop-only math */
+  .story { height:300vh; position:relative; }
+  .story .pin { height:100vh; display:flex; align-items:center; justify-content:center; background:var(--ink); color:var(--paper); overflow:hidden; }
+  .story .pin h2 { font-size:120px; white-space:nowrap; }
+
+  /* DEFECT: oversized image, no srcset */
+  .shot { width:1600px; height:auto; display:block; margin:48px 0; border-radius:22px; }
+
+  /* DEFECT: autoplay video without playsinline/muted */
+  video { width:1152px; border-radius:22px; display:block; margin:0 auto; }
+
+  /* DEFECT: 12px inputs, tiny submit */
+  form { display:flex; gap:12px; padding:96px 0; }
+  input { font-size:12px; padding:10px 14px; border:1.5px solid var(--ink); border-radius:100px; width:360px; font-family:inherit; }
+  button[type=submit] { font-size:12px; height:30px; padding:0 14px; border-radius:100px; border:0; background:var(--ink); color:var(--lime); }
+
+  /* DEFECT: fixed bar with no safe-area, 100vh sticky sidebar */
+  .bar { position:fixed; bottom:0; left:0; right:0; background:var(--accent); padding:10px 0; font-size:12px; text-align:center; }
+  footer { padding:64px 0 96px; font-size:12px; color:var(--mute); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="logo">Nimbus</div>
+    <ul>
+      <li><a href="#">Product</a>
+        <div class="menu"><a href="#">Notes</a><a href="#">Boards</a><a href="#">Sync</a></div>
+      </li>
+      <li><a href="#">Pricing</a></li>
+      <li><a href="#">Docs</a></li>
+      <li><button class="icon-btn" aria-label="Search">⌕</button></li>
+      <li><button class="icon-btn" aria-label="Theme">◐</button></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div>
+      <h1>Notes that move as fast as you do.</h1>
+      <p>Capture, link and share ideas across your whole team. Nimbus syncs in the background so you never wait.</p>
+      <a class="cta" href="#start">Start free</a>
+    </div>
+    <canvas id="scene" width="560" height="560"></canvas>
+  </section>
+
+  <section class="features">
+    <div class="card"><h3>Instant sync</h3><p>Every keystroke lands on every device before you lift your finger. Offline edits merge without conflicts.</p><span class="more">Learn more →</span></div>
+    <div class="card"><h3>Linked thinking</h3><p>Backlinks, graph view and daily notes. Ideas find each other.</p><span class="more">Learn more →</span></div>
+    <div class="card"><h3>Team spaces</h3><p>Shared boards with roles, comments and version history.</p><span class="more">Learn more →</span></div>
+  </section>
+
+  <section class="story">
+    <div class="pin"><h2 class="marquee">Write once. Read everywhere.</h2></div>
+  </section>
+
+  <img class="shot" src="https://picsum.photos/seed/nimbus/1600/900" alt="Nimbus app screenshot">
+
+  <video autoplay loop src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"></video>
+
+  <form id="start">
+    <input type="text" placeholder="Work email">
+    <button type="submit">Get access</button>
+  </form>
+
+  <footer>© Nimbus Labs · Built for the desk.</footer>
+</div>
+<div class="bar">Nimbus 2.0 is here — read the changelog</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+  // DEFECT: no matchMedia, no reduced-motion, pixel values tuned for 1440px
+  gsap.to('.marquee', {
+    x: -1400,
+    ease: 'none',
+    scrollTrigger: { trigger: '.story', start: 'top top', end: 'bottom bottom', scrub: true, pin: '.pin' }
+  });
+  gsap.from('.card', { y: 80, opacity: 0, stagger: 0.15, scrollTrigger: { trigger: '.features', start: 'top 70%' } });
+</script>
+<script type="module">
+  import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js';
+  window.__THREE__ = THREE.REVISION;
+  const canvas = document.getElementById('scene');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  // DEFECT: uncapped DPR, fixed size, no resize, no pause when off-screen
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(560, 560, false);
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  cam.position.z = 4;
+  const geo = new THREE.TorusKnotGeometry(1, 0.32, 180, 24);
+  const mat = new THREE.MeshStandardMaterial({ color: 0xffd95a, metalness: 0.4, roughness: 0.3 });
+  const knot = new THREE.Mesh(geo, mat);
+  scene.add(knot);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+  const light = new THREE.DirectionalLight(0xc8f25c, 2); light.position.set(3, 4, 5); scene.add(light);
+  (function loop(){ knot.rotation.x += 0.006; knot.rotation.y += 0.009; renderer.render(scene, cam); requestAnimationFrame(loop); })();
+</script>
+</body>
+</html>

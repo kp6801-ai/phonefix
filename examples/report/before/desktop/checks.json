@@ -1,0 +1,81 @@
+{
+  "issues": [
+    {
+      "id": "overflow-x",
+      "category": "layout",
+      "severity": 4,
+      "selector": "div.wrap > img.shot:nth-child(5)",
+      "detail": "Page is 1744px wide on a 1440px viewport — horizontal scroll. Widest offenders: div.wrap > img.shot:nth-child(5) (1600px wide, +304px past edge)",
+      "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+    }
+  ],
+  "metrics": {
+    "viewport": {
+      "w": 1440,
+      "h": 900,
+      "dpr": 1
+    },
+    "docWidth": 1744,
+    "docHeight": 6076,
+    "viewportMeta": null,
+    "hasBreakpoints": false,
+    "hasReducedMotion": false,
+    "hasSafeArea": false,
+    "hasHoverMQ": false,
+    "libs": {
+      "gsap": true,
+      "scrollTrigger": true,
+      "three": true,
+      "lenis": false,
+      "framer": false,
+      "webglContexts": 1
+    },
+    "counts": {
+      "tapTargets": 10,
+      "tiny": 5,
+      "smallText": 2,
+      "canvases": 1,
+      "images": 1,
+      "fixed": 1
+    },
+    "sections": [
+      [
+        0,
+        72
+      ],
+      [
+        72,
+        900
+      ],
+      [
+        972,
+        356
+      ],
+      [
+        1328,
+        2700
+      ],
+      [
+        4076,
+        900
+      ],
+      [
+        5024,
+        648
+      ],
+      [
+        5672,
+        229
+      ],
+      [
+        5901,
+        175
+      ]
+    ],
+    "cssUnreadable": 0
+  },
+  "coverage": {
+    "cssUnreadable": []
+  },
+  "consoleErrors": []
+}

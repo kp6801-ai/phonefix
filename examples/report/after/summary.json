@@ -1,0 +1,722 @@
+{
+  "label": "after",
+  "origin": "examples/fixed",
+  "generatedAt": "2026-10-28T21:53:55.376Z",
+  "devices": [
+    {
+      "id": "iphone-se",
+      "name": "iPhone SE (2nd/3rd gen)",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 375,
+        "height": 667
+      },
+      "dpr": 2,
+      "dir": "after/iphone-se",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 375,
+          "h": 667,
+          "dpr": 2
+        },
+        "docWidth": 375,
+        "docHeight": 3002,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            667
+          ],
+          [
+            739,
+            714
+          ],
+          [
+            1453,
+            667
+          ],
+          [
+            2168,
+            193
+          ],
+          [
+            2409,
+            193
+          ],
+          [
+            2602,
+            204
+          ],
+          [
+            2806,
+            148
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "iphone-15",
+      "name": "iPhone 15",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 393,
+        "height": 659
+      },
+      "dpr": 3,
+      "dir": "after/iphone-15",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 393,
+          "h": 659,
+          "dpr": 3
+        },
+        "docWidth": 393,
+        "docHeight": 3002,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            674
+          ],
+          [
+            746,
+            713
+          ],
+          [
+            1459,
+            659
+          ],
+          [
+            2166,
+            203
+          ],
+          [
+            2417,
+            203
+          ],
+          [
+            2620,
+            204
+          ],
+          [
+            2824,
+            130
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "iphone-15-pro-max",
+      "name": "iPhone 15 Pro Max",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 430,
+        "height": 739
+      },
+      "dpr": 3,
+      "dir": "after/iphone-15-pro-max",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 430,
+          "h": 739,
+          "dpr": 3
+        },
+        "docWidth": 430,
+        "docHeight": 3126,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            739
+          ],
+          [
+            811,
+            713
+          ],
+          [
+            1524,
+            739
+          ],
+          [
+            2311,
+            223
+          ],
+          [
+            2582,
+            223
+          ],
+          [
+            2804,
+            144
+          ],
+          [
+            2948,
+            130
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "pixel-7",
+      "name": "Pixel 7",
+      "route": "/",
+      "browser": "chromium",
+      "guard": false,
+      "viewport": {
+        "width": 412,
+        "height": 839
+      },
+      "dpr": 2.625,
+      "dir": "after/pixel-7",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 412,
+          "h": 839,
+          "dpr": 2.625
+        },
+        "docWidth": 412,
+        "docHeight": 3306,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            839
+          ],
+          [
+            911,
+            711
+          ],
+          [
+            1622,
+            839
+          ],
+          [
+            2509,
+            213
+          ],
+          [
+            2770,
+            213
+          ],
+          [
+            2984,
+            144
+          ],
+          [
+            3128,
+            130
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "galaxy-s23",
+      "name": "Galaxy S23",
+      "route": "/",
+      "browser": "chromium",
+      "guard": false,
+      "viewport": {
+        "width": 360,
+        "height": 780
+      },
+      "dpr": 3,
+      "dir": "after/galaxy-s23",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 360,
+          "h": 780,
+          "dpr": 3
+        },
+        "docWidth": 360,
+        "docHeight": 3208,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            780
+          ],
+          [
+            852,
+            711
+          ],
+          [
+            1563,
+            780
+          ],
+          [
+            2391,
+            185
+          ],
+          [
+            2624,
+            185
+          ],
+          [
+            2808,
+            204
+          ],
+          [
+            3012,
+            148
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "ipad",
+      "name": "iPad (portrait)",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 768,
+        "height": 1024
+      },
+      "dpr": 2,
+      "dir": "after/ipad",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 768,
+          "h": 1024,
+          "dpr": 2
+        },
+        "docWidth": 768,
+        "docHeight": 3910,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            1024
+          ],
+          [
+            1096,
+            535
+          ],
+          [
+            1631,
+            1024
+          ],
+          [
+            2703,
+            405
+          ],
+          [
+            3156,
+            405
+          ],
+          [
+            3561,
+            171
+          ],
+          [
+            3732,
+            130
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "iphone-15-landscape",
+      "name": "iPhone 15 landscape",
+      "route": "/",
+      "browser": "webkit",
+      "guard": false,
+      "viewport": {
+        "width": 734,
+        "height": 343
+      },
+      "dpr": 3,
+      "dir": "after/iphone-15-landscape",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 734,
+          "h": 343,
+          "dpr": 3
+        },
+        "docWidth": 734,
+        "docHeight": 2923,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            768
+          ],
+          [
+            840,
+            529
+          ],
+          [
+            1369,
+            343
+          ],
+          [
+            1760,
+            386
+          ],
+          [
+            2194,
+            386
+          ],
+          [
+            2580,
+            165
+          ],
+          [
+            2745,
+            130
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    },
+    {
+      "id": "desktop",
+      "name": "Desktop guard 1440",
+      "route": "/",
+      "browser": "chromium",
+      "guard": true,
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "dpr": 1,
+      "dir": "after/desktop",
+      "shots": [
+        "00.jpg",
+        "25.jpg",
+        "50.jpg",
+        "75.jpg",
+        "100.jpg",
+        "full.jpg"
+      ],
+      "metrics": {
+        "viewport": {
+          "w": 1440,
+          "h": 900,
+          "dpr": 1
+        },
+        "docWidth": 1440,
+        "docHeight": 5883,
+        "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+        "hasBreakpoints": true,
+        "hasReducedMotion": true,
+        "hasSafeArea": true,
+        "hasHoverMQ": true,
+        "libs": {
+          "gsap": true,
+          "scrollTrigger": true,
+          "three": true,
+          "lenis": false,
+          "framer": false,
+          "webglContexts": 1
+        },
+        "counts": {
+          "tapTargets": 13,
+          "tiny": 0,
+          "smallText": 0,
+          "canvases": 1,
+          "images": 1,
+          "fixed": 1
+        },
+        "sections": [
+          [
+            0,
+            72
+          ],
+          [
+            72,
+            900
+          ],
+          [
+            972,
+            401
+          ],
+          [
+            1373,
+            2700
+          ],
+          [
+            4121,
+            648
+          ],
+          [
+            4817,
+            648
+          ],
+          [
+            5465,
+            240
+          ],
+          [
+            5705,
+            130
+          ]
+        ],
+        "cssUnreadable": 0
+      },
+      "issues": [],
+      "counts": {},
+      "cssUnreadable": []
+    }
+  ],
+  "totals": {},
+  "uniqueIssues": [],
+  "durationMs": 38744
+}

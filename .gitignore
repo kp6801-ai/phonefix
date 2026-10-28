@@ -1,0 +1,11 @@
+node_modules/
+phonefix-report/
+_site/
+.DS_Store
+*.log
+.playwright-cache/
+examples/report/**/25.jpg
+examples/report/**/50.jpg
+examples/report/**/75.jpg
+examples/report/**/100.jpg
+examples/report/**/full.jpg
