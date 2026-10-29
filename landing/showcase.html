@@ -3,84 +3,124 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=1280, initial-scale=1">
-<title>phonefix showcase (recorded to demo.gif / demo.mp4 by scripts/record-demo.mjs)</title>
+<title>phonefix showcase (recorded to demo.mp4 / demo.gif by scripts/record-demo.mjs)</title>
+<!-- Scene: a MacBook and an iPhone 15 Pro, both running the same live site (default spikestudiodxb.com,
+     override with ?site=<url>). The recorder drives the scrolling from outside the frames; this file
+     owns the device entrance (GSAP), the idle float, the light sweep and the command pill. ?still = final pose, no motion. -->
 <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
   :root { --ink:#0b0b0c; --paper:#faf8f3; --lemon:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; }
   html, body { margin:0; width:1280px; height:720px; overflow:hidden; background:var(--ink); color:var(--paper); font-family:'Funnel Sans',sans-serif; }
-  .stage { position:relative; width:1280px; height:720px; background:radial-gradient(900px 500px at 50% 110%, #1d1d14 0%, var(--ink) 60%); }
-  .orb { position:absolute; top:26px; left:50%; transform:translateX(-50%); width:52px; height:52px; animation:spin 24s linear infinite; }
+  .stage { position:relative; width:1280px; height:720px; overflow:hidden; background:
+    radial-gradient(620px 300px at 36% 92%, rgba(255,217,90,.16) 0%, rgba(255,217,90,0) 70%),
+    radial-gradient(420px 260px at 86% 86%, rgba(200,242,92,.14) 0%, rgba(200,242,92,0) 70%),
+    radial-gradient(900px 520px at 50% 110%, #1b1b14 0%, var(--ink) 62%); }
+  .grid { position:absolute; inset:0; background-image:linear-gradient(rgba(250,248,243,.045) 1px, transparent 1px), linear-gradient(90deg, rgba(250,248,243,.045) 1px, transparent 1px); background-size:64px 64px; mask-image:radial-gradient(700px 420px at 50% 60%, #000 30%, transparent 100%); -webkit-mask-image:radial-gradient(700px 420px at 50% 60%, #000 30%, transparent 100%); }
+  .orb { position:absolute; top:24px; left:50%; transform:translateX(-50%); width:52px; height:52px; animation:spin 24s linear infinite; }
   @keyframes spin { to { transform:translateX(-50%) rotate(360deg); } }
-  .head { position:absolute; top:88px; left:0; right:0; text-align:center; }
+  .head { position:absolute; top:70px; left:0; right:0; text-align:center; }
   .head h1 { font-family:'Funnel Display'; font-weight:800; font-size:40px; letter-spacing:-.03em; line-height:1; margin:0; }
   .head h1 em { font-style:normal; color:var(--lemon); }
-  .label { font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--mute); }
+  .label { font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--mute); margin-bottom:10px; }
+
+  .scene { position:absolute; inset:0; perspective:2200px; perspective-origin:50% 42%; }
+  .floor { position:absolute; left:140px; top:690px; width:1060px; height:60px; border-radius:50%; background:radial-gradient(closest-side, rgba(0,0,0,.9), rgba(0,0,0,0)); filter:blur(14px); }
 
   /* ---- MacBook ---- */
-  .mac { position:absolute; left:140px; top:172px; width:860px; }
-  .mac .lid { position:relative; width:860px; height:500px; background:#0f0f11; border-radius:22px 22px 0 0; padding:18px 18px 0; box-shadow:0 40px 90px -30px rgba(0,0,0,.95), inset 0 0 0 1.5px #2b2b2f; }
-  .mac .lid::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:140px; height:20px; background:#0f0f11; border-radius:0 0 12px 12px; z-index:3; }
-  .mac .lid::after { content:''; position:absolute; top:7px; left:50%; transform:translateX(-50%); width:7px; height:7px; border-radius:50%; background:#1f3d1f; box-shadow:0 0 6px #2f7a2f; z-index:4; }
-  .mac .screen { position:relative; width:824px; height:482px; overflow:hidden; border-radius:8px 8px 0 0; background:#000; }
-  .mac .screen iframe { width:1440px; height:900px; border:0; transform:scale(.5722); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; }
+  .mac { position:absolute; left:120px; top:168px; width:860px; transform-style:preserve-3d; will-change:transform; }
+  .mac .lid { position:relative; width:860px; height:500px; background:linear-gradient(160deg,#1a1a1d,#0e0e10 55%,#141416); border-radius:24px 24px 0 0; padding:18px 18px 0; box-shadow:0 50px 100px -30px rgba(0,0,0,.95), inset 0 0 0 1.5px #303035, inset 0 1px 0 rgba(255,255,255,.08); }
+  .mac .lid::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:150px; height:20px; background:#0e0e10; border-radius:0 0 12px 12px; z-index:3; }
+  .mac .lid::after { content:''; position:absolute; top:7px; left:50%; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; background:#1f3d1f; box-shadow:0 0 6px #2f7a2f; z-index:4; }
+  .mac .screen { position:relative; width:824px; height:482px; overflow:hidden; border-radius:10px 10px 0 0; background:#faf8f3; }
+  .mac .screen iframe { width:1440px; height:900px; border:0; transform:scale(.5722); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
+  .mac .sweep { position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
   .mac .hinge { width:860px; height:12px; background:linear-gradient(#3a3a3f, #1a1a1d); }
-  .mac .base { position:relative; width:1000px; height:26px; margin-left:-70px; background:linear-gradient(#2e2e32, #141416); border-radius:0 0 18px 18px; box-shadow:0 30px 60px -20px rgba(0,0,0,.9); }
-  .mac .base::before { content:''; position:absolute; left:50%; transform:translateX(-50%); top:0; width:160px; height:7px; background:#0a0a0b; border-radius:0 0 8px 8px; }
+  .mac .base { position:relative; width:1000px; height:26px; margin-left:-70px; background:linear-gradient(#34343a, #151517); border-radius:0 0 18px 18px; box-shadow:0 34px 60px -18px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.12); }
+  .mac .base::before { content:''; position:absolute; left:50%; transform:translateX(-50%); top:0; width:170px; height:7px; background:#0a0a0b; border-radius:0 0 8px 8px; }
   .mac .base::after { content:''; position:absolute; left:0; right:0; bottom:0; height:4px; background:#0a0a0b; border-radius:0 0 18px 18px; }
 
-  /* ---- iPhone 15 Pro ---- */
-  .iphone { position:absolute; left:960px; top:244px; width:230px; height:470px; border-radius:38px; background:linear-gradient(135deg,#4a4a50,#232326 40%,#3a3a3f); padding:7px; box-shadow:0 40px 80px -24px rgba(0,0,0,.95), 0 0 0 1.5px #55555c inset; z-index:5; transform:rotate(-3deg); }
-  .iphone::before, .iphone::after { content:''; position:absolute; background:#2a2a2e; border-radius:3px; }
-  .iphone::before { left:-3px; top:110px; width:3px; height:30px; box-shadow:0 52px 0 #2a2a2e, 0 106px 0 #2a2a2e; }
-  .iphone::after { right:-3px; top:150px; width:3px; height:64px; }
-  .iphone .glass { position:relative; width:216px; height:456px; border-radius:32px; overflow:hidden; background:#000; box-shadow:inset 0 0 0 3px #0b0b0c; }
-  .iphone .island { position:absolute; top:10px; left:50%; transform:translateX(-50%); width:70px; height:20px; background:#000; border-radius:12px; z-index:3; }
-  .iphone .glass iframe { width:393px; height:830px; border:0; transform:scale(.5496); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; }
-  .iphone .home { position:absolute; bottom:6px; left:50%; transform:translateX(-50%); width:74px; height:4px; border-radius:2px; background:rgba(255,255,255,.75); z-index:3; }
-  .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:32px; background:linear-gradient(115deg, rgba(255,255,255,.14) 0%, rgba(255,255,255,0) 32%); pointer-events:none; z-index:2; }
+  /* ---- iPhone 15 Pro (titanium) ---- */
+  .iphone { position:absolute; left:958px; top:238px; width:232px; height:474px; border-radius:40px; padding:8px; z-index:5; will-change:transform;
+    background:linear-gradient(145deg,#6d6d74 0%,#2c2c30 28%,#3b3b40 60%,#6a6a71 100%);
+    box-shadow:0 50px 90px -24px rgba(0,0,0,.95), 0 0 0 1.5px #77777f inset, 0 0 0 3px #1c1c1f inset; }
+  .iphone::before, .iphone::after { content:''; position:absolute; background:linear-gradient(#55555c,#2d2d31); border-radius:3px; }
+  .iphone::before { left:-3px; top:112px; width:3px; height:30px; box-shadow:0 52px 0 #3a3a3f, 0 106px 0 #3a3a3f; }
+  .iphone::after { right:-3px; top:152px; width:3px; height:66px; }
+  .iphone .glass { position:relative; width:216px; height:458px; border-radius:33px; overflow:hidden; background:#faf8f3; box-shadow:inset 0 0 0 3px #0b0b0c; }
+  .iphone .island { position:absolute; top:11px; left:50%; transform:translateX(-50%); width:72px; height:21px; background:#000; border-radius:12px; z-index:3; }
+  .iphone .island::after { content:''; position:absolute; right:8px; top:6px; width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #233 0, #000 60%); }
+  .iphone .glass iframe { width:393px; height:834px; border:0; transform:scale(.5496); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
+  .iphone .home { position:absolute; bottom:7px; left:50%; transform:translateX(-50%); width:76px; height:4px; border-radius:2px; background:rgba(11,11,12,.8); z-index:3; }
+  .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:33px; background:linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 34%); pointer-events:none; z-index:2; }
 
-  .tag { position:absolute; white-space:nowrap; font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:8px 14px; border-radius:100px; z-index:6; }
-  .tag.bad { background:var(--lemon); color:var(--ink); left:140px; top:140px; }
+  .tag { position:absolute; white-space:nowrap; font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:8px 14px; border-radius:100px; z-index:6; opacity:0; }
+  .tag.bad { background:var(--lemon); color:var(--ink); left:120px; top:148px; }
   .tag.good { background:var(--lime); color:var(--ink); right:40px; top:206px; }
-  .cmd { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); background:var(--paper); color:var(--ink); border-radius:100px; padding:14px 26px; font-family:'Geist Mono'; font-size:18px; display:flex; gap:14px; align-items:center; opacity:0; z-index:7; }
+  .cmd { position:absolute; bottom:16px; left:50%; transform:translateX(-50%); background:var(--paper); color:var(--ink); border-radius:100px; padding:14px 26px; font-family:'Geist Mono'; font-size:18px; display:flex; gap:14px; align-items:center; opacity:0; z-index:7; box-shadow:0 20px 50px -20px rgba(0,0,0,.8); }
   .cmd .k { color:#1a7f37; }
-  .credit { position:absolute; top:36px; right:36px; font-family:'Geist Mono'; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); }
+  .credit { position:absolute; top:36px; right:36px; font-family:'Geist Mono'; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); }
 </style>
 </head>
 <body>
 <div class="stage">
+  <div class="grid"></div>
   <img class="orb" src="assets/orb.svg" alt="">
   <div class="head"><div class="label">phonefix · one command. every phone.</div><h1>Built for a <em>laptop</em>. Fixed for every <em>thumb</em>.</h1></div>
+  <div class="credit">by SPIKE Studio · Dubai</div>
 
-  <span class="tag bad">What your AI saw · 1440px</span>
-  <div class="mac">
-    <div class="lid"><div class="screen"><iframe id="lap" src="../examples/laptop-only/" title="laptop-only demo"></iframe></div></div>
-    <div class="hinge"></div>
-    <div class="base"></div>
+  <div class="scene">
+    <div class="floor"></div>
+    <span class="tag bad">spikestudiodxb.com · desktop 1440px</span>
+    <div class="mac">
+      <div class="lid"><div class="screen"><iframe id="lap" name="lap" title="site on a laptop"></iframe><div class="sweep"></div></div></div>
+      <div class="hinge"></div>
+      <div class="base"></div>
+    </div>
+
+    <span class="tag good">same site · iPhone 15 · passes phonefix</span>
+    <div class="iphone"><div class="glass"><div class="island"></div><iframe id="ph" name="ph" title="site on an iPhone"></iframe><div class="home"></div></div></div>
   </div>
 
-  <span class="tag good">phonefix · iPhone · 0 issues</span>
-  <div class="iphone"><div class="glass"><div class="island"></div><iframe id="ph" src="../examples/fixed/" title="fixed demo"></iframe><div class="home"></div></div></div>
-
   <div class="cmd"><span>$</span><span><span class="k">npx</span> skills add kp6801-ai/phonefix</span></div>
-  <div class="credit">by SPIKE Studio · Dubai</div>
 </div>
 <script>
-  const ease = t => t < .5 ? 2*t*t : -1 + (4 - 2*t)*t;
-  const scrollOver = (win, from, to, ms) => new Promise(res => { const t0 = performance.now(); (function f(now){ const p = Math.min(1, (now - t0)/ms); win.scrollTo(0, from + (to - from)*ease(p)); if (p < 1) requestAnimationFrame(f); else res(); })(t0); });
-  window.__showcase = (async () => {
-    if (location.search.includes('still')) return 'still';
-    const lap = document.getElementById('lap'), ph = document.getElementById('ph');
-    await Promise.all([lap, ph].map(f => new Promise(r => f.contentDocument && f.contentDocument.readyState === 'complete' ? r() : f.addEventListener('load', r))));
-    await new Promise(r => setTimeout(r, 1800));
-    const L = lap.contentWindow, P = ph.contentWindow;
-    const lMax = L.document.documentElement.scrollHeight - L.innerHeight, pMax = P.document.documentElement.scrollHeight - P.innerHeight;
-    await Promise.all([scrollOver(L, 0, lMax, 7600), scrollOver(P, 0, pMax, 7600)]);
-    document.querySelector('.cmd').animate([{ opacity: 0, transform: 'translate(-50%, 12px)' }, { opacity: 1, transform: 'translate(-50%, 0)' }], { duration: 500, fill: 'forwards', easing: 'cubic-bezier(.16,1,.3,1)' });
-    await new Promise(r => setTimeout(r, 1500));
-    await Promise.all([scrollOver(L, lMax, 0, 1100), scrollOver(P, pMax, 0, 1100)]);
-    return 'done';
-  })();
+  const q = new URLSearchParams(location.search);
+  const site = q.get('site') || 'https://spikestudiodxb.com/?nogate';
+  const still = q.has('still');
+  const lap = document.getElementById('lap'), ph = document.getElementById('ph');
+  const loaded = f => new Promise(r => { f.addEventListener('load', r, { once: true }); });
+  const frames = Promise.all([loaded(lap), loaded(ph)]);
+  lap.src = site; ph.src = site;
+
+  const mac = document.querySelector('.mac'), phone = document.querySelector('.iphone'), tags = document.querySelectorAll('.tag'), sweep = document.querySelector('.sweep');
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  // final pose
+  const pose = () => { gsap.set(mac, { rotateY: 0, rotateX: 0, y: 0, opacity: 1 }); gsap.set(phone, { y: 0, rotate: -3, scale: 1, opacity: 1 }); gsap.set(tags, { opacity: 1, y: 0 }); };
+
+  function entrance() {
+    const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+    tl.fromTo(mac, { rotateY: -16, rotateX: 9, y: 70, opacity: 0 }, { rotateY: 0, rotateX: 0, y: 0, opacity: 1, duration: 1.15 }, 0)
+      .fromTo(phone, { y: 150, rotate: -12, scale: .9, opacity: 0 }, { y: 0, rotate: -3, scale: 1, opacity: 1, duration: 1.05 }, .22)
+      .fromTo(tags, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: .5, stagger: .12 }, .85)
+      .fromTo(sweep, { xPercent: -110 }, { xPercent: 110, duration: .9, ease: 'power2.inOut' }, .55);
+    // idle: the phone breathes, the laptop barely
+    tl.add(() => {
+      gsap.to(phone, { y: -5, rotate: -2.4, duration: 2.6, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+      gsap.to(mac, { y: -2, duration: 3.4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    });
+    return tl;
+  }
+
+  window.__showcase = {
+    still,
+    site,
+    ready: frames.then(() => wait(still ? 300 : 900)),           // frames loaded + fonts/first paint settled
+    play: () => still ? (pose(), Promise.resolve()) : new Promise(r => entrance().eventCallback('onComplete', r)),
+    cmd: () => new Promise(r => gsap.to('.cmd', { opacity: 1, y: 0, duration: .5, ease: 'expo.out', startAt: { y: 12 }, onComplete: r })),
+  };
+  if (still) frames.then(pose);
 </script>
 </body>
 </html>
