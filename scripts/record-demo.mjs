@@ -5,6 +5,7 @@
  *   node scripts/record-demo.mjs                                   # site = https://spikestudiodxb.com
  *   node scripts/record-demo.mjs --site https://example.com/        # any site that allows framing
  *   node scripts/record-demo.mjs --site-dir ../spike-rebuild/dist   # a local static build, served on a second port
+ *   node scripts/record-demo.mjs --portrait [...]                    # the 1080x1350 phone-viewer take (demo-portrait.mp4 + poster)
  * Frames come straight from Chromium's screencast at 2x (2560x1440 JPEG, no VP8 re-encode), timed by
  * the compositor timestamps, then encoded once at 30 fps. The scrolling is driven from here, not from
  * inside the page, so cross-origin frames work: synthetic wheel events (Lenis and friends listen to them),
@@ -37,14 +38,16 @@ const siteDir = arg('--site-dir');
 const siteSrv = siteDir ? await serve(path.resolve(siteDir)) : null;
 const site = siteSrv ? `${siteSrv.origin}/?nogate` : arg('--site', 'https://spikestudiodxb.com/?nogate');
 
-const SCROLL_MS = 8400, LAP_PX = 3400, PHONE_PX = 3800, HOLD_MS = 1400, FPS = 30;
+const PORTRAIT = argv.includes('--portrait');   // 1080x1350 take for phone viewers: the iPhone is the hero, the Mac peeks in behind
+const SCROLL_MS = 8400, LAP_PX = PORTRAIT ? 2600 : 3400, PHONE_PX = 3800, HOLD_MS = 1400, FPS = 30;
+const W = PORTRAIT ? 540 : 1280, H = PORTRAIT ? 675 : 720;
 
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 2 });
+const ctx = await browser.newContext({ viewport: { width: W, height: H }, deviceScaleFactor: 2 });
 // runs in every frame, including cross-origin ones: pre-accept the site's cookie notice so it never shows in the take
 await ctx.addInitScript(() => { try { localStorage.setItem('spike-cookie-ok', '1'); } catch {} });
 const page = await ctx.newPage();
-await page.goto(`${main.origin}/landing/showcase.html?site=${encodeURIComponent(site)}`, { waitUntil: 'load' });
+await page.goto(`${main.origin}/landing/showcase.html?site=${encodeURIComponent(site)}${PORTRAIT ? '&portrait' : ''}`, { waitUntil: 'load' });
 await page.evaluate(() => window.__showcase.ready);
 
 // ---- screencast: every compositor frame, 2x, JPEG ----
@@ -56,12 +59,12 @@ cdp.on('Page.screencastFrame', ({ data, metadata, sessionId }) => {
   frames.push({ f, t: metadata.timestamp });
   cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {});
 });
-await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: 2560, maxHeight: 1440, everyNthFrame: 1 });
+await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: W * 2, maxHeight: H * 2, everyNthFrame: 1 });
 await page.waitForTimeout(250);
 
 const tPlay = Date.now();
 await page.evaluate(() => window.__showcase.play());
-await page.screenshot({ path: path.join(out, 'demo-poster.jpg'), type: 'jpeg', quality: 86, scale: 'css' });
+await page.screenshot({ path: path.join(out, PORTRAIT ? 'demo-portrait-poster.jpg' : 'demo-poster.jpg'), type: 'jpeg', quality: 86, scale: 'css' });
 
 const frame = (name) => page.frames().find(f => f.name() === name);
 const lapF = frame('lap'), phF = frame('ph');
@@ -94,13 +97,17 @@ await browser.close(); main.server.close(); siteSrv && siteSrv.server.close();
 if (frames.length < 30) throw new Error(`only ${frames.length} frames captured`);
 const list = frames.map((fr, i) => `file '${fr.f}'\nduration ${(i + 1 < frames.length ? frames[i + 1].t - fr.t : 1 / FPS).toFixed(5)}`).join('\n') + `\nfile '${frames[frames.length - 1].f}'\n`;
 const listPath = path.join(tmp, 'list.txt'); fs.writeFileSync(listPath, list);
-const mp4 = path.join(out, 'demo.mp4'), mp4s = path.join(out, 'demo-720.mp4'), gif = path.join(out, 'demo.gif'), pal = path.join(tmp, 'pal.png');
+const mp4 = path.join(out, 'demo.mp4'), mp4p = path.join(out, 'demo-portrait.mp4'), gif = path.join(out, 'demo.gif'), pal = path.join(tmp, 'pal.png');
 const src = ['-f', 'concat', '-safe', '0', '-i', listPath];
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', `fps=${FPS},scale=1920:1080:flags=lanczos`, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', '-preset', 'slow', '-movflags', '+faststart', mp4]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', `fps=${FPS},scale=1280:720:flags=lanczos`, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', mp4s]);   // phones get this one
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', 'fps=10,scale=720:-1:flags=lanczos,palettegen=max_colors=96:stats_mode=diff', pal]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-i', pal, '-lavfi', 'fps=10,scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif]);
 const sz = f => (fs.statSync(f).size / 1e6).toFixed(2) + ' MB';
 const span = frames[frames.length - 1].t - frames[0].t;
-console.log(`site ${site}\n${frames.length} frames over ${span.toFixed(1)}s (${(frames.length / span).toFixed(0)} fps captured) · scene ${played.toFixed(1)}s\nmp4 ${sz(mp4)} · 720p ${sz(mp4s)} · gif ${sz(gif)} · poster ${sz(path.join(out, 'demo-poster.jpg'))}`);
+if (PORTRAIT) {
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', `fps=${FPS},scale=1080:1350:flags=lanczos`, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', mp4p]);
+  console.log(`site ${site}\n${frames.length} frames over ${span.toFixed(1)}s (${(frames.length / span).toFixed(0)} fps captured) · scene ${played.toFixed(1)}s\nportrait mp4 ${sz(mp4p)} · poster ${sz(path.join(out, 'demo-portrait-poster.jpg'))}`);
+  fs.rmSync(tmp, { recursive: true, force: true }); process.exit(0);
+}
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', `fps=${FPS},scale=1920:1080:flags=lanczos`, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', '-preset', 'slow', '-movflags', '+faststart', mp4]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', 'fps=10,scale=720:-1:flags=lanczos,palettegen=max_colors=96:stats_mode=diff', pal]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-i', pal, '-lavfi', 'fps=10,scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif]);
+console.log(`site ${site}\n${frames.length} frames over ${span.toFixed(1)}s (${(frames.length / span).toFixed(0)} fps captured) · scene ${played.toFixed(1)}s\nmp4 ${sz(mp4)} · gif ${sz(gif)} · poster ${sz(path.join(out, 'demo-poster.jpg'))}`);
 fs.rmSync(tmp, { recursive: true, force: true });
