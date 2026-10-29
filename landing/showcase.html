@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
-  :root { --ink:#0b0b0c; --paper:#faf8f3; --lemon:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; }
+  :root { --ink:#0b0b0c; --paper:#faf8f3; --lemon:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; --theme:#ffd95a; }
   html, body { margin:0; width:1280px; height:720px; overflow:hidden; background:var(--ink); color:var(--paper); font-family:'Funnel Sans',sans-serif; }
   .stage { position:relative; width:1280px; height:720px; overflow:hidden; background:
     radial-gradient(620px 300px at 36% 92%, rgba(255,217,90,.16) 0%, rgba(255,217,90,0) 70%),
@@ -42,17 +42,22 @@
   .mac .base::after { content:''; position:absolute; left:0; right:0; bottom:0; height:4px; background:#0a0a0b; border-radius:0 0 18px 18px; }
 
   /* ---- iPhone 15 Pro (titanium) ---- */
-  .iphone { position:absolute; left:928px; top:196px; width:250px; height:512px; border-radius:42px; padding:8px; z-index:5; will-change:transform;
+  .iphone { position:absolute; left:928px; top:192px; width:250px; height:523px; border-radius:42px; padding:8px; z-index:5; will-change:transform;
     background:linear-gradient(145deg,#6d6d74 0%,#2c2c30 28%,#3b3b40 60%,#6a6a71 100%);
     box-shadow:0 60px 90px -20px rgba(0,0,0,1), -30px 30px 70px -20px rgba(0,0,0,.85), 0 0 0 1.5px #77777f inset, 0 0 0 3px #1c1c1f inset; }
   .iphone .psweep { position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:35px; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.26) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
   .iphone::before, .iphone::after { content:''; position:absolute; background:linear-gradient(#55555c,#2d2d31); border-radius:3px; }
   .iphone::before { left:-3px; top:120px; width:3px; height:32px; box-shadow:0 52px 0 #3a3a3f, 0 106px 0 #3a3a3f; }
   .iphone::after { right:-3px; top:164px; width:3px; height:70px; }
-  .iphone .glass { position:relative; width:234px; height:496px; border-radius:35px; overflow:hidden; background:#faf8f3; box-shadow:inset 0 0 0 1px #0b0b0c; }
+  .iphone .glass { position:relative; width:234px; height:507px; border-radius:35px; overflow:hidden; background:#faf8f3; box-shadow:inset 0 0 0 1px #0b0b0c; }
+  /* iOS status bar in the site's theme colour (Safari tints it from <meta name=theme-color>); the page viewport starts below it, as on a real phone */
+  .iphone .sb { position:absolute; top:0; left:0; right:0; height:35px; background:var(--theme); z-index:2; color:var(--ink); font-family:'Funnel Sans'; font-weight:600; font-size:11px; letter-spacing:-.01em; }
+  .iphone .sb .t { position:absolute; left:24px; top:11px; }
+  .iphone .sb .r { position:absolute; right:16px; top:11px; display:flex; gap:5px; align-items:center; }
+  .iphone .sb svg { display:block; height:10px; width:auto; }
   .iphone .island { position:absolute; top:12px; left:50%; transform:translateX(-50%); width:78px; height:22px; background:#000; border-radius:12px; z-index:3; }
   .iphone .island::after { content:''; position:absolute; right:8px; top:6px; width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #233 0, #000 60%); }
-  .iphone .glass iframe { width:393px; height:834px; border:0; transform:scale(.5954); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
+  .iphone .glass iframe { width:393px; height:793px; border:0; transform:scale(.5954); transform-origin:0 0; position:absolute; top:35px; left:0; pointer-events:none; background:#faf8f3; }
   .iphone .home { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:82px; height:4px; border-radius:2px; background:rgba(11,11,12,.8); z-index:3; }
   .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:35px; background:linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 34%); pointer-events:none; z-index:2; }
 
@@ -78,13 +83,17 @@
   body.portrait .mac .screen iframe { transform:scale(.425); }
   body.portrait .mac .hinge { width:640px; height:9px; }
   body.portrait .mac .base { width:720px; height:20px; margin-left:-40px; }
-  body.portrait .iphone { left:34px; top:104px; width:272px; height:562px; border-radius:46px; padding:9px; }
+  body.portrait .iphone { left:34px; top:100px; width:272px; height:569px; border-radius:46px; padding:9px; }
   body.portrait .iphone::before { top:130px; height:34px; box-shadow:0 56px 0 #3a3a3f, 0 114px 0 #3a3a3f; }
   body.portrait .iphone::after { top:178px; height:76px; }
-  body.portrait .iphone .glass { width:254px; height:544px; border-radius:38px; }
+  body.portrait .iphone .glass { width:254px; height:551px; border-radius:38px; }
+  body.portrait .iphone .sb { height:38px; font-size:12px; }
+  body.portrait .iphone .sb .t { left:26px; top:12px; }
+  body.portrait .iphone .sb .r { right:18px; top:12px; }
+  body.portrait .iphone .sb svg { height:11px; }
   body.portrait .iphone .glass::after, body.portrait .iphone .psweep { border-radius:38px; }
   body.portrait .iphone .island { top:13px; width:84px; height:24px; }
-  body.portrait .iphone .glass iframe { transform:scale(.6463); height:842px; }
+  body.portrait .iphone .glass iframe { transform:scale(.6463); height:794px; top:38px; }
   body.portrait .iphone .home { width:90px; bottom:9px; }
   body.portrait .tag { font-size:10px; padding:6px 11px; }
   body.portrait .tag.good { left:34px; right:auto; top:74px; }
@@ -110,7 +119,7 @@
     </div>
 
     <span class="tag good">same site · iPhone 15 · passes phonefix</span>
-    <div class="iphone"><div class="glass"><div class="island"></div><iframe id="ph" name="ph" title="site on an iPhone"></iframe><div class="psweep"></div><div class="home"></div></div></div>
+    <div class="iphone"><div class="glass"><div class="sb"><span class="t">9:41</span><span class="r"><svg viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".6"/><rect x="4.5" y="5" width="3" height="6" rx=".6"/><rect x="9" y="2.5" width="3" height="8.5" rx=".6"/><rect x="13.5" y="0" width="3" height="11" rx=".6"/></svg><svg viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.6c2.3 0 4.4.9 6 2.3l-1.2 1.3A6.9 6.9 0 0 0 8 4.4c-1.8 0-3.5.7-4.8 1.8L2 4.9A8.4 8.4 0 0 1 8 2.6zm0 3.3c1.4 0 2.7.5 3.7 1.4l-1.2 1.3A3.9 3.9 0 0 0 8 7.7c-.9 0-1.8.3-2.5.9L4.3 7.3A5.4 5.4 0 0 1 8 5.9zm0 3.3c.6 0 1.1.2 1.5.6L8 11.3 6.5 9.8c.4-.4.9-.6 1.5-.6z"/></svg><svg viewBox="0 0 27 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="23" height="11" rx="3"/><rect x="2.5" y="2.5" width="19" height="7" rx="1.6" fill="currentColor" stroke="none"/><path d="M25 4v4" stroke-width="1.6" stroke-linecap="round"/></svg></span></div><div class="island"></div><iframe id="ph" name="ph" title="site on an iPhone"></iframe><div class="psweep"></div><div class="home"></div></div></div>
   </div></div>
 
   <div class="cmd"><span>$</span><span><span class="k">npx</span> skills add kp6801-ai/phonefix</span></div>
@@ -119,6 +128,7 @@
   const q = new URLSearchParams(location.search);
   const site = q.get('site') || 'https://spikestudiodxb.com/?nogate';
   const still = q.has('still'), portrait = q.has('portrait');
+  if (q.get('theme')) document.documentElement.style.setProperty('--theme', q.get('theme'));
   if (portrait) { document.body.classList.add('portrait'); document.querySelector('.tag.bad').textContent = 'desktop · 1440px'; }
   const MAC = portrait ? { rotateY: -14, rotateX: 0, y: 0, z: -40, scale: .98 } : { rotateY: 0, rotateX: 0, y: 0, z: 0, scale: 1 };
   const lap = document.getElementById('lap'), ph = document.getElementById('ph');
