@@ -5,8 +5,10 @@
  *   node scripts/record-demo.mjs                                   # site = https://spikestudiodxb.com
  *   node scripts/record-demo.mjs --site https://example.com/        # any site that allows framing
  *   node scripts/record-demo.mjs --site-dir ../spike-rebuild/dist   # a local static build, served on a second port
- * The scrolling is driven from here, not from inside the page, so cross-origin frames work:
- * synthetic wheel events (Lenis / smooth-scroll libraries pick them up), falling back to scrollBy. */
+ * Frames come straight from Chromium's screencast at 2x (2560x1440 JPEG, no VP8 re-encode), timed by
+ * the compositor timestamps, then encoded once at 30 fps. The scrolling is driven from here, not from
+ * inside the page, so cross-origin frames work: synthetic wheel events (Lenis and friends listen to them),
+ * falling back to scrollBy. */
 import fs from 'node:fs';
 import path from 'node:path';
 import http from 'node:http';
@@ -35,19 +37,31 @@ const siteDir = arg('--site-dir');
 const siteSrv = siteDir ? await serve(path.resolve(siteDir)) : null;
 const site = siteSrv ? `${siteSrv.origin}/?nogate` : arg('--site', 'https://spikestudiodxb.com/?nogate');
 
-const SCROLL_MS = 8200, LAP_PX = 3400, PHONE_PX = 3800, HOLD_MS = 1500, BACK_MS = 1100;
+const SCROLL_MS = 8400, LAP_PX = 3400, PHONE_PX = 3800, HOLD_MS = 1400, FPS = 30;
 
 const browser = await chromium.launch();
-const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1, recordVideo: { dir: tmp, size: { width: 1280, height: 720 } } });
+const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 2 });
 // runs in every frame, including cross-origin ones: pre-accept the site's cookie notice so it never shows in the take
 await ctx.addInitScript(() => { try { localStorage.setItem('spike-cookie-ok', '1'); } catch {} });
 const page = await ctx.newPage();
-const tRec = Date.now();
 await page.goto(`${main.origin}/landing/showcase.html?site=${encodeURIComponent(site)}`, { waitUntil: 'load' });
 await page.evaluate(() => window.__showcase.ready);
+
+// ---- screencast: every compositor frame, 2x, JPEG ----
+const cdp = await ctx.newCDPSession(page);
+const frames = []; let n = 0;
+cdp.on('Page.screencastFrame', ({ data, metadata, sessionId }) => {
+  const f = path.join(tmp, `f${String(n++).padStart(5, '0')}.jpg`);
+  fs.writeFileSync(f, Buffer.from(data, 'base64'));
+  frames.push({ f, t: metadata.timestamp });
+  cdp.send('Page.screencastFrameAck', { sessionId }).catch(() => {});
+});
+await cdp.send('Page.startScreencast', { format: 'jpeg', quality: 90, maxWidth: 2560, maxHeight: 1440, everyNthFrame: 1 });
+await page.waitForTimeout(250);
+
 const tPlay = Date.now();
 await page.evaluate(() => window.__showcase.play());
-await page.screenshot({ path: path.join(out, 'demo-poster.jpg'), type: 'jpeg', quality: 82 });
+await page.screenshot({ path: path.join(out, 'demo-poster.jpg'), type: 'jpeg', quality: 86, scale: 'css' });
 
 const frame = (name) => page.frames().find(f => f.name() === name);
 const lapF = frame('lap'), phF = frame('ph');
@@ -55,7 +69,7 @@ if (!lapF || !phF) throw new Error('device frames not found');
 
 /* eased scroll over `ms`, total `px`, via wheel events (smooth-scroll libraries listen to them); falls back to scrollBy */
 const scrollIn = (f, px, ms) => f.evaluate(({ px, ms }) => new Promise(res => {
-  const ease = t => t < .5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;   // cubic in-out: slow start, slow settle
   let last = 0, t0 = performance.now(), native = false, probed = false;
   const y0 = window.scrollY;
   (function tick(now) {
@@ -66,25 +80,27 @@ const scrollIn = (f, px, ms) => f.evaluate(({ px, ms }) => new Promise(res => {
   })(t0);
 }), { px, ms });
 
-const t0 = Date.now();
+await page.waitForTimeout(400);
 await Promise.all([scrollIn(lapF, LAP_PX, SCROLL_MS), scrollIn(phF, PHONE_PX, SCROLL_MS)]);
 await page.evaluate(() => window.__showcase.cmd());
 await page.waitForTimeout(HOLD_MS);
-await Promise.all([scrollIn(lapF, -LAP_PX, BACK_MS), scrollIn(phF, -PHONE_PX, BACK_MS)]);
-await page.waitForTimeout(500);
-const played = (Date.now() - t0) / 1000;
-const video = page.video();
-await ctx.close();
-const webm = await video.path();
+await page.evaluate(() => window.__showcase.outro());
+await page.waitForTimeout(150);
+await cdp.send('Page.stopScreencast');
+const played = (Date.now() - tPlay) / 1000;
 await browser.close(); main.server.close(); siteSrv && siteSrv.server.close();
 
-// trim the load, keep the entrance; encode mp4 + gif (gif: 8 fps, 800 px, 96 colours keeps it small enough for the README)
-const start = Math.max(0, (tPlay - tRec) / 1000 - 0.45).toFixed(2);
-const len = '14';
-const mp4 = path.join(out, 'demo.mp4'), gif = path.join(out, 'demo.gif'), pal = path.join(tmp, 'pal.png');
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-t', len, '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', mp4]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-t', len, '-vf', 'fps=8,scale=720:-1:flags=lanczos,palettegen=max_colors=80:stats_mode=diff', pal]);
-execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-ss', start, '-i', webm, '-i', pal, '-t', len, '-lavfi', 'fps=8,scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif]);
+// ---- encode: concat frames with their real durations, resample to 30 fps ----
+if (frames.length < 30) throw new Error(`only ${frames.length} frames captured`);
+const list = frames.map((fr, i) => `file '${fr.f}'\nduration ${(i + 1 < frames.length ? frames[i + 1].t - fr.t : 1 / FPS).toFixed(5)}`).join('\n') + `\nfile '${frames[frames.length - 1].f}'\n`;
+const listPath = path.join(tmp, 'list.txt'); fs.writeFileSync(listPath, list);
+const mp4 = path.join(out, 'demo.mp4'), mp4s = path.join(out, 'demo-720.mp4'), gif = path.join(out, 'demo.gif'), pal = path.join(tmp, 'pal.png');
+const src = ['-f', 'concat', '-safe', '0', '-i', listPath];
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', `fps=${FPS},scale=1920:1080:flags=lanczos`, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '23', '-preset', 'slow', '-movflags', '+faststart', mp4]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', `fps=${FPS},scale=1280:720:flags=lanczos`, '-an', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-crf', '24', '-preset', 'slow', '-movflags', '+faststart', mp4s]);   // phones get this one
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-vf', 'fps=10,scale=720:-1:flags=lanczos,palettegen=max_colors=96:stats_mode=diff', pal]);
+execFileSync('ffmpeg', ['-y', '-loglevel', 'error', ...src, '-i', pal, '-lavfi', 'fps=10,scale=720:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5:diff_mode=rectangle', '-loop', '0', gif]);
 const sz = f => (fs.statSync(f).size / 1e6).toFixed(2) + ' MB';
-console.log(`site ${site}\nscene played ${played.toFixed(1)}s after a ${((tPlay - tRec) / 1000).toFixed(1)}s load (trimmed ${start}s)\nmp4 ${sz(mp4)} · gif ${sz(gif)} · poster ${sz(path.join(out, 'demo-poster.jpg'))}`);
+const span = frames[frames.length - 1].t - frames[0].t;
+console.log(`site ${site}\n${frames.length} frames over ${span.toFixed(1)}s (${(frames.length / span).toFixed(0)} fps captured) · scene ${played.toFixed(1)}s\nmp4 ${sz(mp4)} · 720p ${sz(mp4s)} · gif ${sz(gif)} · poster ${sz(path.join(out, 'demo-poster.jpg'))}`);
 fs.rmSync(tmp, { recursive: true, force: true });
