@@ -33,11 +33,9 @@
 
   /* ---- MacBook: screen 764x477 = the 1440x900 page at .5306, edges meet ---- */
   .mac { position:absolute; left:58px; top:130px; width:871px; will-change:transform; z-index:1; }
-  .mac .lid { position:relative; width:871px; height:540px; background:linear-gradient(160deg,#1a1a1d,#0e0e10 55%,#141416); border-radius:22px 22px 0 0; padding:18px 18px 0; box-shadow:0 50px 100px -30px rgba(0,0,0,.95), inset 0 0 0 1.5px #303035, inset 0 1px 0 rgba(255,255,255,.08); }
-  .mac .lid::before { content:''; position:absolute; top:0; left:50%; transform:translateX(-50%); width:140px; height:18px; background:#0e0e10; border-radius:0 0 11px 11px; z-index:3; }
-  .mac .lid::after { content:''; position:absolute; top:6px; left:50%; transform:translateX(-50%); width:6px; height:6px; border-radius:50%; background:#1f3d1f; box-shadow:0 0 6px #2f7a2f; z-index:4; }
-  .mac .screen { position:relative; width:835px; height:522px; overflow:hidden; border-radius:9px 9px 0 0; background:#faf8f3; }
-  .mac .screen iframe { width:1440px; height:900px; border:0; transform:scale(.5799); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
+  .mac .lid { position:relative; width:871px; height:549px; background:linear-gradient(160deg,#1a1a1d,#0e0e10 55%,#141416); border-radius:14px 14px 0 0; padding:6px 6px 0; box-shadow:0 50px 100px -30px rgba(0,0,0,.95), inset 0 0 0 1.5px #303035, inset 0 1px 0 rgba(255,255,255,.08); }
+      .mac .screen { position:relative; width:859px; height:537px; overflow:hidden; border-radius:9px 9px 0 0; background:#faf8f3; }
+  .mac .screen iframe { width:1440px; height:900px; border:0; transform:scale(.5965); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
   .mac .sweep { position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
   .mac .hinge { width:871px; height:12px; background:linear-gradient(#3a3a3f, #1a1a1d); }
   .mac .base { position:relative; width:1001px; height:26px; margin-left:-65px; background:linear-gradient(#34343a, #151517); border-radius:0 0 18px 18px; box-shadow:0 34px 60px -18px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.12); }
@@ -45,19 +43,19 @@
   .mac .base::after { content:''; position:absolute; left:0; right:0; bottom:0; height:4px; background:#0a0a0b; border-radius:0 0 18px 18px; }
 
   /* ---- iPhone 15 Pro: screen 220x477 = the 393x852 page at .5601, edges meet; sits beside the Mac, never over it ---- */
-  .iphone { position:absolute; left:965px; top:130px; width:257px; height:538px; border-radius:43px; padding:8px; z-index:5; will-change:transform;
+  .iphone { position:absolute; left:965px; top:130px; width:257px; height:550px; border-radius:40px; padding:3px; z-index:5; will-change:transform;
     background:linear-gradient(145deg,#6d6d74 0%,#2c2c30 28%,#3b3b40 60%,#6a6a71 100%);
     box-shadow:0 60px 90px -20px rgba(0,0,0,1), 0 0 0 1.5px #77777f inset, 0 0 0 3px #1c1c1f inset; }
   .iphone::before, .iphone::after { content:''; position:absolute; background:linear-gradient(#55555c,#2d2d31); border-radius:3px; }
   .iphone::before { left:-3px; top:122px; width:3px; height:32px; box-shadow:0 54px 0 #3a3a3f, 0 108px 0 #3a3a3f; }
   .iphone::after { right:-3px; top:166px; width:3px; height:72px; }
-  .iphone .glass { position:relative; width:241px; height:522px; border-radius:36px; overflow:hidden; background:#faf8f3; }
+  .iphone .glass { position:relative; width:251px; height:544px; border-radius:37px; overflow:hidden; background:#faf8f3; }
   .iphone .island { position:absolute; top:11px; left:50%; transform:translateX(-50%); width:74px; height:22px; background:#000; border-radius:12px; z-index:3; }
   .iphone .island::after { content:''; position:absolute; right:7px; top:5px; width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #233 0, #000 60%); }
-  .iphone .glass iframe { width:393px; height:852px; border:0; transform:scale(.6132); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }  /* the page owns the whole screen */
-  .iphone .psweep { position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:36px; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.26) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
+  .iphone .glass iframe { width:393px; height:852px; border:0; transform:scale(.6387); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }  /* the page owns the whole screen */
+  .iphone .psweep { position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:37px; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.26) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
   .iphone .home { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:80px; height:4px; border-radius:2px; background:rgba(11,11,12,.8); z-index:3; }
-  .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:36px; background:linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 34%); pointer-events:none; z-index:2; }
+  .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:37px; background:linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 34%); pointer-events:none; z-index:2; }
 
   .tag { position:absolute; white-space:nowrap; font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:8px 14px; border-radius:100px; z-index:6; opacity:0; }
   .tag.bad { background:var(--lemon); color:var(--ink); left:58px; top:92px; }
@@ -73,14 +71,14 @@
   body.portrait .head h1 { font-size:22px; }
   body.portrait .label { font-size:10px; margin-bottom:5px; }
   body.portrait .floor { left:0; top:650px; width:540px; height:50px; }
-  body.portrait .iphone { left:133px; top:92px; width:274px; height:575px; border-radius:46px; padding:8px; }  /* whole phone inside the 675px frame */
+  body.portrait .iphone { left:133px; top:86px; width:274px; height:587px; border-radius:44px; padding:3px; }  /* whole phone inside the 675px frame */
   body.portrait .iphone::before { top:130px; height:34px; box-shadow:0 56px 0 #3a3a3f, 0 114px 0 #3a3a3f; }
   body.portrait .iphone::after { top:178px; height:76px; }
-  body.portrait .iphone .glass { width:258px; height:559px; border-radius:39px; }
-  body.portrait .iphone .glass::after, body.portrait .iphone .psweep { border-radius:39px; }
+  body.portrait .iphone .glass { width:268px; height:581px; border-radius:41px; }
+  body.portrait .iphone .glass::after, body.portrait .iphone .psweep { border-radius:41px; }
   body.portrait .iphone .island { top:12px; width:80px; height:23px; }
   body.portrait .iphone .island::after { right:9px; top:6px; width:10px; height:10px; }
-  body.portrait .iphone .glass iframe { transform:scale(.6565); }
+  body.portrait .iphone .glass iframe { transform:scale(.6819); }
   body.portrait .iphone .home { width:86px; height:4px; bottom:8px; }
   body.portrait .tag.good { left:50%; right:auto; top:56px; transform:translateX(-50%); font-size:10px; padding:6px 11px; }
   body.portrait .cmd { display:none; }
