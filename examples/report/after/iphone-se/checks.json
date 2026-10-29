@@ -1,0 +1,84 @@
+{
+  "issues": [],
+  "metrics": {
+    "viewport": {
+      "w": 375,
+      "h": 667,
+      "dpr": 2
+    },
+    "docWidth": 375,
+    "docHeight": 4796,
+    "viewportMeta": "width=device-width, initial-scale=1, viewport-fit=cover",
+    "hasBreakpoints": true,
+    "hasReducedMotion": true,
+    "hasSafeArea": true,
+    "hasHoverMQ": true,
+    "libs": {
+      "gsap": true,
+      "scrollTrigger": true,
+      "three": true,
+      "lenis": false,
+      "framer": false,
+      "webglContexts": 1
+    },
+    "counts": {
+      "tapTargets": 14,
+      "tiny": 0,
+      "smallText": 0,
+      "canvases": 1,
+      "images": 4,
+      "fixed": 2
+    },
+    "sections": [
+      [
+        0,
+        64
+      ],
+      [
+        64,
+        728
+      ],
+      [
+        792,
+        75
+      ],
+      [
+        867,
+        940
+      ],
+      [
+        1807,
+        1584
+      ],
+      [
+        3391,
+        268
+      ],
+      [
+        3699,
+        193
+      ],
+      [
+        3932,
+        211
+      ],
+      [
+        4198,
+        481
+      ],
+      [
+        4680,
+        68
+      ],
+      [
+        622,
+        45
+      ]
+    ],
+    "cssUnreadable": 0
+  },
+  "coverage": {
+    "cssUnreadable": []
+  },
+  "consoleErrors": []
+}

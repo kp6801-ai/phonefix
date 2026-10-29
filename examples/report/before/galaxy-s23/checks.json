@@ -1,0 +1,221 @@
+{
+  "issues": [
+    {
+      "id": "viewport-missing",
+      "category": "viewport",
+      "severity": 4,
+      "selector": "head",
+      "detail": "No <meta name=\"viewport\"> — phones render the page at ~980px and zoom out.",
+      "fix": "Add <meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
+    },
+    {
+      "id": "overflow-x",
+      "category": "layout",
+      "severity": 4,
+      "selector": "div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1)",
+      "detail": "Page is 1624px wide on a 1440px viewport — horizontal scroll. Widest offenders: div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1) (1600px wide, +184px past edge); header.wrap.hero > div.orb.b:nth-child(2) (260px wide, +80px past edge)",
+      "fix": "Fix the root cause: fixed px widths → min()/clamp()/%, grid columns → minmax(0,1fr), images max-width:100%, nowrap headings → wrap or clamp(). overflow-x:clip on html is the LAST resort."
+    },
+    {
+      "id": "fixed-width-rules",
+      "category": "layout",
+      "severity": 3,
+      "selector": ".wrap",
+      "detail": "5 unconditional CSS rule(s) set width/min-width > 430px: .wrap { width:1200px }, #scene { width:560px }, .panel { width:720px }, .shot { width:1600px }, video { width:1152px }",
+      "fix": "Replace with width:min(1200px,100%) or max-width + width:100%; use clamp() for fluid sizes."
+    },
+    {
+      "id": "no-breakpoints",
+      "category": "layout",
+      "severity": 3,
+      "selector": "stylesheets",
+      "detail": "No @media (min/max-width) rules anywhere — layout cannot adapt.",
+      "fix": "Author mobile-first and add breakpoints where the content breaks (not device sizes)."
+    },
+    {
+      "id": "input-font",
+      "category": "forms",
+      "severity": 3,
+      "selector": "#start > div:nth-child(1) > form:nth-child(2) > input:nth-child(1)",
+      "detail": "font-size 12px — iOS Safari auto-zooms the page on focus.",
+      "fix": "Set inputs to font-size:16px (or 1rem) and add inputmode/enterkeyhint/autocomplete."
+    },
+    {
+      "id": "tap-targets",
+      "category": "touch",
+      "severity": 3,
+      "selector": "nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1)",
+      "detail": "6 interactive element(s) smaller than 44×44: nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(1) > a:nth-child(1) 50×18; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(2) > a:nth-child(1) 45×18; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(3) > a:nth-child(1) 32×18; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 24×24; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 24×24; #start > div:nth-child(1) > form:nth-child(2) > button:nth-child(2) 88×30",
+      "fix": "Give controls min-height:44px / min-width:44px via padding; for icon buttons keep the glyph small and enlarge the hit area with padding or a ::before pseudo-element."
+    },
+    {
+      "id": "hover-only",
+      "category": "touch",
+      "severity": 3,
+      "selector": "nav li:hover .menu",
+      "detail": "2 :hover rule(s) reveal/hide content outside @media (hover:hover): nav li:hover .menu → display; .card:hover .more → opacity. Touch devices have no hover — content is unreachable or sticks after tap.",
+      "fix": "Wrap decorative hover in @media (hover:hover) and (pointer:fine). Hover-revealed menus/tooltips need a tap toggle (aria-expanded) or must be visible by default on touch."
+    },
+    {
+      "id": "video-attrs",
+      "category": "media",
+      "severity": 3,
+      "selector": "video",
+      "detail": "autoplay without muted (blocked on iOS/Android); no playsinline (iOS opens full-screen player); no poster",
+      "fix": "<video autoplay muted playsinline loop poster=\"…\" preload=\"metadata\">"
+    },
+    {
+      "id": "canvas-dpr",
+      "category": "3d",
+      "severity": 3,
+      "selector": "#scene",
+      "detail": "Canvas backing store is 1680×1680 for a 560×560 CSS box (ratio 3.00, device DPR 3) — Three.js renders 9× the pixels a phone can show.",
+      "fix": "renderer.setPixelRatio(Math.min(devicePixelRatio, 2)) — 1.5 on pointer:coarse or hardwareConcurrency<=4; size the canvas from its container with ResizeObserver."
+    },
+    {
+      "id": "tiny-text",
+      "category": "type",
+      "severity": 2,
+      "selector": "nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1)",
+      "detail": "12 text element(s) under 12px: nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(4) > button.icon-btn:nth-child(1) 11px; nav > div.wrap:nth-child(1) > ul:nth-child(2) > li:nth-child(5) > button.icon-btn:nth-child(1) 11px; header.wrap.hero > div:nth-child(3) > span.mono:nth-child(1) 11px; section.wrap.features > div.card:nth-child(1) > span.n:nth-child(1) 11px; section.wrap.features > div.card:nth-child(2) > span.n:nth-child(1) 11px",
+      "fix": "Minimum 12px for labels/captions, 16px for body copy on phones."
+    },
+    {
+      "id": "vh-units",
+      "category": "layout",
+      "severity": 2,
+      "selector": ".hero",
+      "detail": "3 rule(s) use 100vh: .hero { height:100vh }; .gallery { height:100vh }; .gallery .rail { height:100vh }. On mobile Safari/Chrome 100vh is taller than the visible area while the URL bar shows, so content hides behind the bar and layouts jump.",
+      "fix": "Use height:100svh (or 100dvh for pinned/full-screen) with a 100vh fallback line before it."
+    },
+    {
+      "id": "safe-area",
+      "category": "layout",
+      "severity": 2,
+      "selector": "div.bar",
+      "detail": "1 fixed bottom bar(s) and no env(safe-area-inset-*) anywhere in CSS — the home indicator overlaps them on iPhone.",
+      "fix": "padding-bottom: calc(12px + env(safe-area-inset-bottom)); plus viewport-fit=cover in the meta."
+    },
+    {
+      "id": "img-srcset",
+      "category": "media",
+      "severity": 2,
+      "selector": "div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1)",
+      "detail": "1 large image(s) (>1200px) served without srcset: div.wrap > div.reveal:nth-child(1) > img.shot:nth-child(1) 1600px — phones download desktop bytes.",
+      "fix": "Add srcset + sizes (or <picture>), loading=\"lazy\" below the fold, decoding=\"async\"."
+    },
+    {
+      "id": "reduced-motion",
+      "category": "motion",
+      "severity": 2,
+      "selector": "stylesheets",
+      "detail": "Animations present (GSAP, ScrollTrigger, Three.js) but nothing honours prefers-reduced-motion.",
+      "fix": "gsap.matchMedia() with \"(prefers-reduced-motion: reduce)\" → duration 0 / static state; CSS: @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}."
+    },
+    {
+      "id": "body-font",
+      "category": "type",
+      "severity": 1,
+      "selector": "body",
+      "detail": "body font-size 15px — readable but tight on phones",
+      "fix": "Prefer 16px base below 768px."
+    },
+    {
+      "id": "img-dims",
+      "category": "media",
+      "severity": 1,
+      "selector": "img",
+      "detail": "4 images lack width/height attributes — layout shift while loading.",
+      "fix": "Add intrinsic width/height attributes (CSS can still set max-width:100%; height:auto)."
+    },
+    {
+      "id": "st-mobile-config",
+      "category": "motion",
+      "severity": 1,
+      "selector": "ScrollTrigger",
+      "detail": "1 pinned section(s); ScrollTrigger mobile config not detected (ignoreMobileResize / normalizeScroll).",
+      "fix": "ScrollTrigger.config({ ignoreMobileResize:true }); consider ScrollTrigger.normalizeScroll(true) for pinned scrub on iOS."
+    }
+  ],
+  "metrics": {
+    "viewport": {
+      "w": 1440,
+      "h": 3120,
+      "dpr": 3
+    },
+    "docWidth": 1624,
+    "docHeight": 9193,
+    "viewportMeta": null,
+    "hasBreakpoints": false,
+    "hasReducedMotion": false,
+    "hasSafeArea": false,
+    "hasHoverMQ": false,
+    "libs": {
+      "gsap": true,
+      "scrollTrigger": true,
+      "three": true,
+      "lenis": false,
+      "framer": false,
+      "webglContexts": 1
+    },
+    "counts": {
+      "tapTargets": 10,
+      "tiny": 6,
+      "smallText": 12,
+      "canvases": 1,
+      "images": 4,
+      "fixed": 2
+    },
+    "sections": [
+      [
+        0,
+        72
+      ],
+      [
+        72,
+        2123
+      ],
+      [
+        2195,
+        96
+      ],
+      [
+        2291,
+        500
+      ],
+      [
+        2791,
+        3923
+      ],
+      [
+        6714,
+        293
+      ],
+      [
+        7067,
+        900
+      ],
+      [
+        8027,
+        648
+      ],
+      [
+        8795,
+        380
+      ],
+      [
+        9175,
+        18
+      ],
+      [
+        3082,
+        38
+      ]
+    ],
+    "cssUnreadable": 0
+  },
+  "coverage": {
+    "cssUnreadable": []
+  },
+  "consoleErrors": []
+}
