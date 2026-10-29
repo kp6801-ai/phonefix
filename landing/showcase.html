@@ -36,6 +36,7 @@
   .mac .lid { position:relative; width:871px; height:549px; background:linear-gradient(160deg,#1a1a1d,#0e0e10 55%,#141416); border-radius:14px 14px 0 0; padding:6px 6px 0; box-shadow:0 50px 100px -30px rgba(0,0,0,.95), inset 0 0 0 1.5px #303035, inset 0 1px 0 rgba(255,255,255,.08); }
       .mac .screen { position:relative; width:859px; height:537px; overflow:hidden; border-radius:9px 9px 0 0; background:#faf8f3; }
   .mac .screen iframe { width:1440px; height:900px; border:0; transform:scale(.5965); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
+  .mac .screen video { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; display:block; background:#faf8f3; }  /* native 2880x1800 take, covers the screen rect exactly */
   .mac .sweep { position:absolute; inset:0; z-index:2; pointer-events:none; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
   .mac .hinge { width:871px; height:12px; background:linear-gradient(#3a3a3f, #1a1a1d); }
   .mac .base { position:relative; width:1001px; height:26px; margin-left:-65px; background:linear-gradient(#34343a, #151517); border-radius:0 0 18px 18px; box-shadow:0 34px 60px -18px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.12); }
@@ -52,7 +53,8 @@
   .iphone .glass { position:relative; width:251px; height:544px; border-radius:37px; overflow:hidden; background:#faf8f3; }
   .iphone .island { position:absolute; top:11px; left:50%; transform:translateX(-50%); width:74px; height:22px; background:#000; border-radius:12px; z-index:3; }
   .iphone .island::after { content:''; position:absolute; right:7px; top:5px; width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #233 0, #000 60%); }
-  .iphone .glass iframe { width:393px; height:852px; border:0; transform:scale(.6387); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }  /* the page owns the whole screen */
+  .iphone .glass iframe { width:393px; height:852px; border:0; transform:scale(.6387); transform-origin:0 0; position:absolute; top:0; left:0; pointer-events:none; background:#faf8f3; }
+  .iphone .glass video { position:absolute; inset:0; width:100%; height:100%; object-fit:fill; display:block; background:#faf8f3; }  /* native 1179x2556 take, covers the glass exactly */  /* the page owns the whole screen */
   .iphone .psweep { position:absolute; inset:0; z-index:2; pointer-events:none; border-radius:37px; background:linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.26) 50%, rgba(255,255,255,0) 60%); transform:translateX(-110%); }
   .iphone .home { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:80px; height:4px; border-radius:2px; background:rgba(11,11,12,.8); z-index:3; }
   .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:37px; background:linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 34%); pointer-events:none; z-index:2; }
@@ -111,11 +113,22 @@
   const site = q.get('site') || 'https://spikestudiodxb.com/?nogate';
   const still = q.has('still'), portrait = q.has('portrait');
   if (portrait) document.body.classList.add('portrait');
-  const lap = document.getElementById('lap'), ph = document.getElementById('ph');
+  let lap = document.getElementById('lap'), ph = document.getElementById('ph');
+  const macSrc = q.get('mac'), phoneSrc = q.get('phone');
   const loaded = f => new Promise(r => { f.addEventListener('load', r, { once: true }); });
-  const frames = portrait ? loaded(ph) : Promise.all([loaded(lap), loaded(ph)]);
-  if (portrait) lap.remove(); else lap.src = site;
-  ph.src = site;
+  const canplay = v => new Promise(r => { if (v.readyState >= 4) r(); else v.addEventListener('canplaythrough', r, { once: true }); });
+  const vid = (src) => { const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.preload = 'auto'; v.src = src; return v; };
+  let frames;
+  if (macSrc || phoneSrc) {
+    // pre-recorded native screen takes: swap the iframes for video textures
+    const pv = vid(phoneSrc); ph.replaceWith(pv); ph = pv;
+    if (portrait) { lap.remove(); frames = canplay(pv); }
+    else { const mv = vid(macSrc); lap.replaceWith(mv); lap = mv; frames = Promise.all([canplay(mv), canplay(pv)]); }
+  } else {
+    frames = portrait ? loaded(ph) : Promise.all([loaded(lap), loaded(ph)]);
+    if (portrait) lap.remove(); else lap.src = site;
+    ph.src = site;
+  }
 
   const mac = document.querySelector('.mac'), phone = document.querySelector('.iphone'), tags = document.querySelectorAll('.tag'), sweep = document.querySelector('.sweep'), psweep = document.querySelector('.psweep'), rig = document.querySelector('.rig');
   const wait = ms => new Promise(r => setTimeout(r, ms));
@@ -143,6 +156,8 @@
     still, site, portrait,
     ready: frames.then(() => wait(still ? 300 : 900)),           // frames loaded + fonts/first paint settled
     play: () => still ? (pose(), Promise.resolve()) : new Promise(r => entrance().eventCallback('onComplete', r)),
+    // video textures: start both screens scrolling together
+    start: () => Promise.all([lap, ph].filter(v => v && v.tagName === 'VIDEO').map(v => v.play())),
     cmd: () => portrait ? Promise.resolve() : new Promise(r => gsap.to('.cmd', { opacity: 1, y: 0, duration: .5, ease: 'expo.out', startAt: { y: 12 }, onComplete: r })),
     // ending: dim the scene so the loop restarts on black and the entrance reads again
     outro: () => new Promise(r => gsap.to('.stage', { opacity: 0, duration: .55, ease: 'power2.in', onComplete: r })),

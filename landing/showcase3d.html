@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, initial-scale=1">
+<title>phonefix 3D showcase (rendered frame by frame by scripts/record-demo-3d.mjs)</title>
+<!-- A MacBook and an iPhone 15 Pro modelled in Three.js (procedural, no licensed device models), the same site's
+     native screen takes mapped onto their screens as video textures. Deterministic: window.__scene.render(t) draws
+     the scene at time t, so the recorder steps t and screenshots every frame.
+     ?mac=<url>&phone=<url> = the takes; ?portrait = 540x675 phone-first framing; ?still = pose at 1.6 s. -->
+<link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@800&family=Funnel+Sans:wght@400;600&family=Geist+Mono:wght@500&display=swap" rel="stylesheet">
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<style>
+  :root { --ink:#0b0b0c; --paper:#faf8f3; --lemon:#ffd95a; --lime:#c8f25c; --mute:#8f8f80; }
+  html, body { margin:0; width:1280px; height:720px; overflow:hidden; background:var(--ink); color:var(--paper); font-family:'Funnel Sans',sans-serif; }
+  .stage { position:relative; width:1280px; height:720px; overflow:hidden; background:var(--ink); }
+  canvas { position:absolute; inset:0; display:block; }
+  .orb { position:absolute; top:-14px; left:50%; transform:translateX(-50%); width:52px; height:52px; animation:spin 24s linear infinite; }
+  @keyframes spin { to { transform:translateX(-50%) rotate(360deg); } }
+  .head { position:absolute; top:26px; left:0; right:0; text-align:center; pointer-events:none; }
+  .head h1 { font-family:'Funnel Display'; font-weight:800; font-size:30px; letter-spacing:-.03em; line-height:1; margin:0; }
+  .head h1 em { font-style:normal; color:var(--lemon); }
+  .label { font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.1em; color:var(--mute); margin-bottom:6px; }
+  .credit { position:absolute; top:14px; right:24px; font-family:'Geist Mono'; font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--mute); }
+  .tag { position:absolute; white-space:nowrap; font-family:'Geist Mono'; font-size:12px; text-transform:uppercase; letter-spacing:.08em; padding:8px 14px; border-radius:100px; z-index:6; opacity:0; }
+  .tag.bad { background:var(--lemon); color:var(--ink); left:58px; top:92px; }
+  .tag.good { background:var(--lime); color:var(--ink); right:40px; top:92px; }
+  .cmd { position:absolute; bottom:12px; left:50%; transform:translateX(-50%); background:var(--paper); color:var(--ink); border-radius:100px; padding:14px 26px; font-family:'Geist Mono'; font-size:18px; display:flex; gap:14px; align-items:center; opacity:0; z-index:7; box-shadow:0 20px 50px -20px rgba(0,0,0,.8); }
+  .cmd .k { color:#1a7f37; }
+  .fade { position:absolute; inset:0; background:#000; opacity:0; z-index:9; pointer-events:none; }
+  body.portrait, body.portrait .stage { width:540px; height:675px; }
+  body.portrait .orb, body.portrait .credit, body.portrait .tag.bad, body.portrait .cmd { display:none; }
+  body.portrait .head { top:12px; } body.portrait .head h1 { font-size:22px; } body.portrait .label { font-size:10px; margin-bottom:5px; }
+  body.portrait .tag.good { left:50%; right:auto; top:56px; transform:translateX(-50%); font-size:10px; padding:6px 11px; }
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="gl"></canvas>
+  <img class="orb" src="assets/orb.svg" alt="">
+  <div class="head"><div class="label">phonefix · one command. every phone.</div><h1>Built for a <em>laptop</em>. Fixed for every <em>thumb</em>.</h1></div>
+  <div class="credit">by SPIKE Studio · Dubai</div>
+  <span class="tag bad">spikestudiodxb.com · desktop 1440px</span>
+  <span class="tag good">same site · iPhone 15 · passes phonefix</span>
+  <div class="cmd"><span>$</span><span><span class="k">npx</span> skills add kp6801-ai/phonefix</span></div>
+  <div class="fade"></div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+const q = new URLSearchParams(location.search);
+const portrait = q.has('portrait'), still = q.has('still');
+if (portrait) document.body.classList.add('portrait');
+const W = portrait ? 540 : 1280, H = portrait ? 675 : 720;
+const T = { entrance: 1.4, scroll: 8.4, pill: 0.35, hold: 1.4, outro: 0.55 };
+T.total = T.entrance + T.scroll + T.pill + T.hold + T.outro;
+
+/* ---------- renderer / scene ---------- */
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true, alpha: true });
+renderer.setPixelRatio(window.devicePixelRatio || 1); renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const scene = new THREE.Scene();
+const pmrem = new THREE.PMREMGenerator(renderer); scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+const camera = new THREE.PerspectiveCamera(portrait ? 32 : 28, W / H, 1, 500);
+
+/* lights */
+scene.add(new THREE.HemisphereLight(0xfff4d6, 0x1a1a14, 0.35));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(-14, 34, 26); key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048); key.shadow.camera.left = -40; key.shadow.camera.right = 40; key.shadow.camera.top = 40; key.shadow.camera.bottom = -40; key.shadow.camera.near = 1; key.shadow.camera.far = 120; key.shadow.bias = -0.0004; key.shadow.radius = 4;
+scene.add(key);
+const rim = new THREE.DirectionalLight(0xffd95a, 0.6); rim.position.set(30, 18, -30); scene.add(rim);
+
+/* floor: dark with a lemon/lime glow and contact shadows */
+const glow = document.createElement('canvas'); glow.width = glow.height = 512; { const g = glow.getContext('2d'); g.fillStyle = '#0b0b0c'; g.fillRect(0, 0, 512, 512);
+  const a = g.createRadialGradient(200, 300, 10, 200, 300, 230); a.addColorStop(0, 'rgba(255,217,90,.28)'); a.addColorStop(1, 'rgba(255,217,90,0)'); g.fillStyle = a; g.fillRect(0, 0, 512, 512);
+  const b = g.createRadialGradient(380, 330, 10, 380, 330, 180); b.addColorStop(0, 'rgba(200,242,92,.22)'); b.addColorStop(1, 'rgba(200,242,92,0)'); g.fillStyle = b; g.fillRect(0, 0, 512, 512); }
+const glowTex = new THREE.CanvasTexture(glow); glowTex.colorSpace = THREE.SRGBColorSpace;
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.MeshStandardMaterial({ map: glowTex, roughness: .95, metalness: 0 }));
+floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+const shadowCatcher = new THREE.Mesh(new THREE.PlaneGeometry(160, 160), new THREE.ShadowMaterial({ opacity: .55 }));
+shadowCatcher.rotation.x = -Math.PI / 2; shadowCatcher.position.y = 0.01; shadowCatcher.receiveShadow = true; scene.add(shadowCatcher);
+
+/* materials */
+const alu = new THREE.MeshStandardMaterial({ color: 0x2c2c31, metalness: .9, roughness: .38 });
+const aluDark = new THREE.MeshStandardMaterial({ color: 0x1b1b1f, metalness: .9, roughness: .45 });
+const titanium = new THREE.MeshStandardMaterial({ color: 0x5a5a60, metalness: .95, roughness: .3 });
+const black = new THREE.MeshStandardMaterial({ color: 0x050506, metalness: .2, roughness: .6 });
+const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xffffff, metalness: 0, roughness: .05, transmission: 0, transparent: true, opacity: .08, clearcoat: 1, clearcoatRoughness: .08 });
+
+/* video textures */
+const vid = (src) => { const v = document.createElement('video'); v.muted = true; v.playsInline = true; v.preload = 'auto'; v.crossOrigin = 'anonymous'; v.src = src; return v; };
+const tex = (v) => { const t = new THREE.VideoTexture(v); t.colorSpace = THREE.SRGBColorSpace; t.minFilter = THREE.LinearMipmapLinearFilter; t.magFilter = THREE.LinearFilter; t.generateMipmaps = true; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); return t; };
+const macV = q.get('mac') ? vid(q.get('mac')) : null, phV = q.get('phone') ? vid(q.get('phone')) : null;
+const screenMat = (v) => v ? new THREE.MeshBasicMaterial({ map: tex(v), toneMapped: false }) : new THREE.MeshBasicMaterial({ color: 0xffd95a });
+
+/* ---------- MacBook (cm) ---------- */
+const mac = new THREE.Group();
+const baseW = 30.4, baseD = 21.5, baseH = 1.1, lidH = 21.3, lidT = .45, scrW = 29.2, scrH = 18.25;   // screen 16:10 = the 1440x900 take, 0.6 cm rim
+const base = new THREE.Mesh(new RoundedBoxGeometry(baseW, baseH, baseD, 4, .35), alu); base.position.y = baseH / 2; base.castShadow = true; base.receiveShadow = true; mac.add(base);
+const deck = new THREE.Mesh(new THREE.PlaneGeometry(baseW - 1.2, baseD - 1.2), aluDark); deck.rotation.x = -Math.PI / 2; deck.position.y = baseH + .005; mac.add(deck);
+const keys = new THREE.Mesh(new THREE.PlaneGeometry(26, 10.5), new THREE.MeshStandardMaterial({ color: 0x111114, roughness: .7, metalness: .3 })); keys.rotation.x = -Math.PI / 2; keys.position.set(0, baseH + .01, -3.2); mac.add(keys);
+const pad = new THREE.Mesh(new THREE.PlaneGeometry(12.5, 7.6), new THREE.MeshStandardMaterial({ color: 0x24242a, roughness: .5, metalness: .4 })); pad.rotation.x = -Math.PI / 2; pad.position.set(0, baseH + .01, 6.2); mac.add(pad);
+const hinge = new THREE.Group(); hinge.position.set(0, baseH, -baseD / 2 + .3); mac.add(hinge);
+const lid = new THREE.Mesh(new RoundedBoxGeometry(baseW, lidH, lidT, 4, .3), alu); lid.position.set(0, lidH / 2, 0); lid.castShadow = true; hinge.add(lid);
+const bezel = new THREE.Mesh(new THREE.PlaneGeometry(baseW - .5, lidH - .5), black); bezel.position.set(0, lidH / 2, lidT / 2 + .01); hinge.add(bezel);
+const macScreen = new THREE.Mesh(new THREE.PlaneGeometry(scrW, scrH), screenMat(macV)); macScreen.position.set(0, lidH / 2 + .05, lidT / 2 + .02); hinge.add(macScreen);
+const macGlass = new THREE.Mesh(new THREE.PlaneGeometry(baseW - .5, lidH - .5), glassMat); macGlass.position.set(0, lidH / 2, lidT / 2 + .03); hinge.add(macGlass);
+mac.position.set(portrait ? -17 : -6, 0, 0); mac.rotation.y = portrait ? .32 : .16; scene.add(mac);
+
+/* ---------- iPhone 15 Pro (cm) ---------- */
+const ph = new THREE.Group();
+const pW = 7.06, pH = 14.66, pT = .83, pScrW = 6.6, pScrH = 14.3;   // screen 393:852, 0.2 cm band
+const body = new THREE.Mesh(new RoundedBoxGeometry(pW, pH, pT, 6, .75), titanium); body.castShadow = true; ph.add(body);
+const back = new THREE.Mesh(new RoundedBoxGeometry(pW - .25, pH - .25, pT - .1, 6, .7), new THREE.MeshStandardMaterial({ color: 0x2a2a2e, metalness: .5, roughness: .55 })); ph.add(back);
+const face = new THREE.Mesh(new THREE.PlaneGeometry(pW - .3, pH - .3), black); face.position.z = pT / 2 + .005; ph.add(face);
+const phScreen = new THREE.Mesh(new THREE.PlaneGeometry(pScrW, pScrH), screenMat(phV)); phScreen.position.z = pT / 2 + .012; ph.add(phScreen);
+const phGlass = new THREE.Mesh(new THREE.PlaneGeometry(pW - .3, pH - .3), glassMat); phGlass.position.z = pT / 2 + .03; ph.add(phGlass);
+// The phone stands level with the Mac's lid, so both pages render at the same pixels per CSS px: closer to the camera it drew ~1.45x larger.
+const phS = portrait ? 1.04 : 1.03;
+ph.scale.setScalar(phS); ph.position.set(portrait ? 6 : 18, (pH / 2) * phS + .02, 0); ph.rotation.set(-.06, portrait ? -.1 : -.36, 0); scene.add(ph);
+
+/* ---------- camera + timeline ---------- */
+const expo = t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const cam0 = portrait ? { pos: [3, 11.5, 52], look: [1.5, 8.8, 0] } : { pos: [4, 13.5, 67], look: [3, 12, 0] };
+const cam1 = portrait ? { pos: [2.5, 11, 48], look: [1.5, 8.6, 0] } : { pos: [3, 12.5, 62], look: [3, 11.8, 0] };
+const phRest = ph.position.y, macRest = mac.position.y;
+const tags = document.querySelectorAll('.tag'), cmd = document.querySelector('.cmd'), fade = document.querySelector('.fade');
+let macDur = 0, phDur = 0;
+
+function pose(t) {
+  const e = expo(clamp(t / T.entrance, 0, 1));
+  hinge.rotation.x = THREE.MathUtils.degToRad(90 - (12 + 92 * e));         // lid opens from 12° to 104° off the base (closed = +90°)
+  mac.position.y = macRest + (1 - e) * 3; mac.rotation.y = (portrait ? .32 : .16) - (1 - e) * .35;
+  const e2 = expo(clamp((t - .22) / 1.1, 0, 1));
+  ph.position.y = phRest + (1 - e2) * 7; ph.rotation.y = (portrait ? -.08 : -.34) + (1 - e2) * .5; ph.rotation.x = -.07 - (1 - e2) * .2;
+  const u = clamp(t / T.total, 0, 1), k = .5 - .5 * Math.cos(Math.PI * u);   // slow dolly over the take
+  camera.position.set(...cam0.pos.map((v, i) => v + (cam1.pos[i] - v) * k));
+  camera.lookAt(...cam0.look.map((v, i) => v + (cam1.look[i] - v) * k));
+  const tagA = clamp((t - .85) / .5, 0, 1); tags.forEach((el, i) => { el.style.opacity = clamp(tagA - i * .25, 0, 1); el.style.transform = `translate(${portrait ? '-50%' : '0'}, ${(1 - tagA) * 10}px)`; });
+  const pillA = clamp((t - (T.entrance + T.scroll)) / .5, 0, 1); cmd.style.opacity = pillA; cmd.style.transform = `translate(-50%, ${(1 - pillA) * 12}px)`;
+  fade.style.opacity = clamp((t - (T.total - T.outro)) / T.outro, 0, 1);
+}
+// seek 4 ms past the asked time: lands inside the 60 fps frame, never on its edge
+const seek = (v, time) => new Promise(r => { if (!v) return r(); const want = clamp(time + .004, 0, Math.max(0, v.duration - .05)); if (Math.abs(v.currentTime - want) < .002) return r(); v.addEventListener('seeked', () => r(), { once: true }); v.currentTime = want; });
+async function render(t) {
+  pose(t);
+  const vt = t - T.entrance;   // screens start scrolling when the entrance settles
+  await Promise.all([seek(macV, vt), seek(phV, vt)]);
+  renderer.render(scene, camera);
+}
+const canplay = v => v ? new Promise(r => { if (v.readyState >= 4) r(); else v.addEventListener('canplaythrough', r, { once: true }); }) : Promise.resolve();
+window.__scene = {
+  T, portrait,
+  ready: Promise.all([canplay(macV), canplay(phV), document.fonts.ready]).then(async () => { macDur = macV ? macV.duration : 0; phDur = phV ? phV.duration : 0; await render(still ? 1.6 : 0); return { macDur, phDur, total: T.total }; }),
+  render,
+};
+</script>
+</body>
+</html>

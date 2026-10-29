@@ -22,10 +22,10 @@
 </p>
 
 <p align="center">
-  <a href="https://kp6801-ai.github.io/phonefix/"><img src="landing/assets/demo.gif" width="900" alt="Twenty-second launch film: the phonefix promise, the seven-device matrix, an agent typing make this mobile-perfect, the real before and after on an iPhone SE, and the install command"></a>
+  <a href="https://kp6801-ai.github.io/phonefix/"><img src="landing/assets/demo.gif" width="900" alt="Twelve-second demo: a 3D MacBook and iPhone 15 Pro rendered in Three.js, spikestudiodxb.com playing on both screens and scrolling together"></a>
 </p>
 
-<p align="center"><sub>Launch film made with the open-source <a href="https://github.com/latent-spaces/brag">/brag</a> skill on this repo. <a href="https://kp6801-ai.github.io/phonefix/examples/report/report.html">Open the bundled before and after report</a>.</sub></p>
+<p align="center"><sub>Our own site, <a href="https://spikestudiodxb.com">spikestudiodxb.com</a>, on a 3D MacBook at 1440px and a 3D iPhone 15 Pro at 393px, each screen a native recording of the page mapped onto the model. Zero severity-4 issues on every phone in the matrix. <a href="https://kp6801-ai.github.io/phonefix/examples/report/report.html">Open the bundled before and after report</a>.</sub></p>
 
 <p align="center">
   <img src="landing/assets/before-iphone-se.jpg" width="180" alt="Before: laptop-only page on iPhone SE, navigation clipped, 3D canvas pushed off screen">
