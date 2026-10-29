@@ -74,7 +74,7 @@
 .demo-video[hidden] { display:none; }
   .demo-video { border:4px solid var(--ink); border-radius:var(--r); overflow:hidden; background:var(--ink); box-shadow:0 24px 60px -24px rgba(11,11,12,.5); }
   .demo-video video { width:100%; height:auto; display:block; aspect-ratio:16/9; object-fit:cover; background:var(--ink); }
-  @media (max-width:700px) { .demo-video { margin:0 calc(-1 * clamp(16px, 4vw, 40px)); border-left:0; border-right:0; border-radius:0; box-shadow:none; } .demo-video video { aspect-ratio:4/5; } }
+  @media (max-width:700px) { .demo-video { margin:0 calc(-1 * clamp(16px, 4vw, 40px)); border-left:0; border-right:0; border-radius:0; box-shadow:none; } }
   .phones[hidden] { display:none; }
   /* phones */
   .phones { display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px, 3vw, 28px); justify-items:center; }
@@ -172,8 +172,8 @@
       <div class="agents"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Copilot</span><span>Gemini CLI</span></div>
     </div>
     <div>
-      <div class="demo-video"><video autoplay muted loop playsinline preload="metadata" poster="assets/demo-poster.jpg?v=7" width="1920" height="1080" aria-label="Fourteen-second demo: spikestudiodxb.com running on a MacBook and on an iPhone 15 Pro at the same time, both scrolling, smooth scroll and reveals playing on both, the phone passing phonefix"><source src="assets/demo-portrait.mp4?v=7" type="video/mp4" media="(max-width: 700px)"><source src="assets/demo.mp4?v=7" type="video/mp4"></video>
-      <script>(function(){var v=document.currentScript.previousElementSibling,p=matchMedia("(max-width: 700px)").matches;if(p){v.poster="assets/demo-portrait-poster.jpg?v=7";v.width=1080;v.height=1350;}var s=v.querySelector(p?"source[media]":"source:not([media])");v.src=s.getAttribute("src");v.load();})();</script></div>
+      <div class="demo-video"><video autoplay muted loop playsinline preload="metadata" poster="assets/demo-poster.jpg?v=8" width="1920" height="1080" aria-label="Fourteen-second demo: spikestudiodxb.com running on a MacBook and on an iPhone 15 Pro at the same time, both scrolling, smooth scroll and reveals playing on both, the phone passing phonefix"><source src="assets/demo-portrait.mp4?v=8" type="video/mp4" media="(max-width: 700px)"><source src="assets/demo.mp4?v=8" type="video/mp4"></video>
+      <script>(function(){var v=document.currentScript.previousElementSibling,mq=matchMedia("(max-width: 700px)"),cur=null;function pick(){var p=mq.matches;if(cur===p)return;cur=p;var s=v.querySelector(p?"source[media]":"source:not([media])");v.style.aspectRatio=p?"4 / 5":"16 / 9";v.poster=p?"assets/demo-portrait-poster.jpg?v=8":"assets/demo-poster.jpg?v=8";v.src=s.getAttribute("src");v.load();v.play&&v.play().catch(function(){});}pick();mq.addEventListener("change",pick);})();</script></div>
       <div class="phones" id="phones" hidden>
         <div class="phone">
           <div class="frame" id="frame-before"><img src="assets/before-iphone-se.jpg" width="750" height="1334" alt="Laptop-only page on iPhone SE: navigation clipped, 3D canvas pushed off-screen, empty hero" loading="lazy" decoding="async"></div>

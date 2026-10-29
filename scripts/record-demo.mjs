@@ -67,8 +67,8 @@ await page.evaluate(() => window.__showcase.play());
 await page.screenshot({ path: path.join(out, PORTRAIT ? 'demo-portrait-poster.jpg' : 'demo-poster.jpg'), type: 'jpeg', quality: 86, scale: 'css' });
 
 const frame = (name) => page.frames().find(f => f.name() === name);
-const lapF = frame('lap'), phF = frame('ph');
-if (!lapF || !phF) throw new Error('device frames not found');
+const lapF = PORTRAIT ? null : frame('lap'), phF = frame('ph');
+if ((!PORTRAIT && !lapF) || !phF) throw new Error('device frames not found');
 
 /* eased scroll over `ms`, total `px`, via wheel events (smooth-scroll libraries listen to them); falls back to scrollBy */
 const scrollIn = (f, px, ms) => f.evaluate(({ px, ms }) => new Promise(res => {
@@ -84,7 +84,7 @@ const scrollIn = (f, px, ms) => f.evaluate(({ px, ms }) => new Promise(res => {
 }), { px, ms });
 
 await page.waitForTimeout(400);
-await Promise.all([scrollIn(lapF, LAP_PX, SCROLL_MS), scrollIn(phF, PHONE_PX, SCROLL_MS)]);
+await Promise.all([lapF && scrollIn(lapF, LAP_PX, SCROLL_MS), scrollIn(phF, PHONE_PX, SCROLL_MS)]);
 await page.evaluate(() => window.__showcase.cmd());
 await page.waitForTimeout(HOLD_MS);
 await page.evaluate(() => window.__showcase.outro());
