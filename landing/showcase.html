@@ -57,7 +57,16 @@
   .iphone .sb svg { display:block; height:10px; width:auto; }
   .iphone .island { position:absolute; top:12px; left:50%; transform:translateX(-50%); width:78px; height:22px; background:#000; border-radius:12px; z-index:3; }
   .iphone .island::after { content:''; position:absolute; right:8px; top:6px; width:9px; height:9px; border-radius:50%; background:radial-gradient(circle at 35% 35%, #233 0, #000 60%); }
-  .iphone .glass iframe { width:393px; height:793px; border:0; transform:scale(.5954); transform-origin:0 0; position:absolute; top:35px; left:0; pointer-events:none; background:#faf8f3; }
+  .iphone .glass iframe { width:393px; height:659px; border:0; transform:scale(.5954); transform-origin:0 0; position:absolute; top:35px; left:0; pointer-events:none; background:#faf8f3; }
+  /* Safari's bottom chrome (iOS 17 layout: address pill + toolbar), tinted by theme-color like the real thing */
+  .iphone .saf { position:absolute; left:0; right:0; bottom:0; height:80px; background:var(--theme); z-index:2; color:var(--ink); }
+  .iphone .saf::before { content:''; position:absolute; left:0; right:0; top:0; height:1px; background:rgba(0,0,0,.14); }
+  .iphone .saf .url { position:absolute; left:9px; right:9px; top:7px; height:27px; border-radius:9px; background:rgba(0,0,0,.09); display:flex; align-items:center; justify-content:center; font-family:'Funnel Sans'; font-size:10.5px; font-weight:600; letter-spacing:-.01em; }
+  .iphone .saf .url::before { content:'AA'; position:absolute; left:9px; font-size:9px; font-weight:700; letter-spacing:0; }
+  .iphone .saf .url::after { content:''; position:absolute; right:9px; width:9px; height:9px; border:1.5px solid currentColor; border-radius:50%; border-top-color:transparent; transform:rotate(45deg); }
+  .iphone .saf .bar { position:absolute; left:0; right:0; bottom:14px; height:26px; display:flex; justify-content:space-around; align-items:center; padding:0 10px; }
+  .iphone .saf .bar svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .iphone .saf .bar svg.dim { opacity:.35; }
   .iphone .home { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:82px; height:4px; border-radius:2px; background:rgba(11,11,12,.8); z-index:3; }
   .iphone .glass::after { content:''; position:absolute; inset:0; border-radius:35px; background:linear-gradient(115deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 34%); pointer-events:none; z-index:2; }
 
@@ -93,7 +102,11 @@
   body.portrait .iphone .sb svg { height:11px; }
   body.portrait .iphone .glass::after, body.portrait .iphone .psweep { border-radius:38px; }
   body.portrait .iphone .island { top:13px; width:84px; height:24px; }
-  body.portrait .iphone .glass iframe { transform:scale(.6463); height:794px; top:38px; }
+  body.portrait .iphone .glass iframe { transform:scale(.6463); height:659px; top:38px; }
+  body.portrait .iphone .saf { height:87px; }
+  body.portrait .iphone .saf .url { top:8px; height:29px; font-size:11.5px; left:10px; right:10px; }
+  body.portrait .iphone .saf .bar { bottom:15px; height:28px; }
+  body.portrait .iphone .saf .bar svg { width:18px; height:18px; }
   body.portrait .iphone .home { width:90px; bottom:9px; }
   body.portrait .tag { font-size:10px; padding:6px 11px; }
   body.portrait .tag.good { left:34px; right:auto; top:74px; }
@@ -119,7 +132,7 @@
     </div>
 
     <span class="tag good">same site · iPhone 15 · passes phonefix</span>
-    <div class="iphone"><div class="glass"><div class="sb"><span class="t">9:41</span><span class="r"><svg viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".6"/><rect x="4.5" y="5" width="3" height="6" rx=".6"/><rect x="9" y="2.5" width="3" height="8.5" rx=".6"/><rect x="13.5" y="0" width="3" height="11" rx=".6"/></svg><svg viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.6c2.3 0 4.4.9 6 2.3l-1.2 1.3A6.9 6.9 0 0 0 8 4.4c-1.8 0-3.5.7-4.8 1.8L2 4.9A8.4 8.4 0 0 1 8 2.6zm0 3.3c1.4 0 2.7.5 3.7 1.4l-1.2 1.3A3.9 3.9 0 0 0 8 7.7c-.9 0-1.8.3-2.5.9L4.3 7.3A5.4 5.4 0 0 1 8 5.9zm0 3.3c.6 0 1.1.2 1.5.6L8 11.3 6.5 9.8c.4-.4.9-.6 1.5-.6z"/></svg><svg viewBox="0 0 27 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="23" height="11" rx="3"/><rect x="2.5" y="2.5" width="19" height="7" rx="1.6" fill="currentColor" stroke="none"/><path d="M25 4v4" stroke-width="1.6" stroke-linecap="round"/></svg></span></div><div class="island"></div><iframe id="ph" name="ph" title="site on an iPhone"></iframe><div class="psweep"></div><div class="home"></div></div></div>
+    <div class="iphone"><div class="glass"><div class="sb"><span class="t">9:41</span><span class="r"><svg viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7" width="3" height="4" rx=".6"/><rect x="4.5" y="5" width="3" height="6" rx=".6"/><rect x="9" y="2.5" width="3" height="8.5" rx=".6"/><rect x="13.5" y="0" width="3" height="11" rx=".6"/></svg><svg viewBox="0 0 16 11" fill="currentColor"><path d="M8 2.6c2.3 0 4.4.9 6 2.3l-1.2 1.3A6.9 6.9 0 0 0 8 4.4c-1.8 0-3.5.7-4.8 1.8L2 4.9A8.4 8.4 0 0 1 8 2.6zm0 3.3c1.4 0 2.7.5 3.7 1.4l-1.2 1.3A3.9 3.9 0 0 0 8 7.7c-.9 0-1.8.3-2.5.9L4.3 7.3A5.4 5.4 0 0 1 8 5.9zm0 3.3c.6 0 1.1.2 1.5.6L8 11.3 6.5 9.8c.4-.4.9-.6 1.5-.6z"/></svg><svg viewBox="0 0 27 12" fill="none" stroke="currentColor"><rect x=".5" y=".5" width="23" height="11" rx="3"/><rect x="2.5" y="2.5" width="19" height="7" rx="1.6" fill="currentColor" stroke="none"/><path d="M25 4v4" stroke-width="1.6" stroke-linecap="round"/></svg></span></div><div class="island"></div><iframe id="ph" name="ph" title="site on an iPhone"></iframe><div class="saf"><div class="url" id="url">spikestudiodxb.com</div><div class="bar"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg><svg class="dim" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg><svg viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M5 12v7h14v-7"/></svg><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/></svg><svg viewBox="0 0 24 24"><rect x="4" y="7" width="13" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2"/></svg></div></div><div class="psweep"></div><div class="home"></div></div></div>
   </div></div>
 
   <div class="cmd"><span>$</span><span><span class="k">npx</span> skills add kp6801-ai/phonefix</span></div>
@@ -129,6 +142,7 @@
   const site = q.get('site') || 'https://spikestudiodxb.com/?nogate';
   const still = q.has('still'), portrait = q.has('portrait');
   if (q.get('theme')) document.documentElement.style.setProperty('--theme', q.get('theme'));
+  document.getElementById('url').textContent = q.get('host') || (/^https?:\/\/(127\.|localhost|\[::1\])/.test(site) ? 'spikestudiodxb.com' : new URL(site).hostname);
   if (portrait) { document.body.classList.add('portrait'); document.querySelector('.tag.bad').textContent = 'desktop · 1440px'; }
   const MAC = portrait ? { rotateY: -14, rotateX: 0, y: 0, z: -40, scale: .98 } : { rotateY: 0, rotateX: 0, y: 0, z: 0, scale: 1 };
   const lap = document.getElementById('lap'), ph = document.getElementById('ph');
