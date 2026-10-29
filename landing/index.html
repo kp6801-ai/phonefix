@@ -80,8 +80,8 @@
   .phones { display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px, 3vw, 28px); justify-items:center; }
   .phone { width:100%; max-width:230px; }
   .phone .frame { position:relative; border:4px solid var(--ink); border-radius:28px; overflow:hidden; background:#fff; aspect-ratio:375/667; box-shadow:0 20px 50px -20px rgba(11,11,12,.45); }
-  .phone .frame img, .phone .frame iframe { width:100%; height:100%; object-fit:cover; object-position:top; border:0; display:block; }
-  .phone .frame iframe { position:absolute; inset:0; }
+  .phone .frame img { width:100%; height:100%; object-fit:cover; object-position:top; border:0; display:block; }
+  .phone .frame iframe { position:absolute; top:0; left:0; width:375px; height:667px; border:0; display:block; transform-origin:0 0; }  /* a true iPhone SE viewport, scaled to the frame by JS */
   .phone .cap { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
   .phone .tag { display:inline-flex; align-items:center; min-height:28px; padding:0 10px; border-radius:100px; font-family:var(--m); font-size:12px; text-transform:uppercase; letter-spacing:.06em; }
   .tag.bad { background:var(--ink); color:var(--accent); } .tag.good { background:var(--lime); color:var(--ink); }
@@ -172,8 +172,8 @@
       <div class="agents"><span>Claude Code</span><span>Cursor</span><span>Codex</span><span>Windsurf</span><span>Copilot</span><span>Gemini CLI</span></div>
     </div>
     <div>
-      <div class="demo-video"><video autoplay muted loop playsinline preload="metadata" poster="assets/demo-poster.jpg?v=8" width="1920" height="1080" aria-label="Fourteen-second demo: spikestudiodxb.com running on a MacBook and on an iPhone 15 Pro at the same time, both scrolling, smooth scroll and reveals playing on both, the phone passing phonefix"><source src="assets/demo-portrait.mp4?v=8" type="video/mp4" media="(max-width: 700px)"><source src="assets/demo.mp4?v=8" type="video/mp4"></video>
-      <script>(function(){var v=document.currentScript.previousElementSibling,mq=matchMedia("(max-width: 700px)"),cur=null;function pick(){var p=mq.matches;if(cur===p)return;cur=p;var s=v.querySelector(p?"source[media]":"source:not([media])");v.style.aspectRatio=p?"4 / 5":"16 / 9";v.poster=p?"assets/demo-portrait-poster.jpg?v=8":"assets/demo-poster.jpg?v=8";v.src=s.getAttribute("src");v.load();v.play&&v.play().catch(function(){});}pick();mq.addEventListener("change",pick);})();</script></div>
+      <div class="demo-video"><video autoplay muted loop playsinline preload="metadata" poster="assets/demo-poster.jpg?v=9" width="1920" height="1080" aria-label="Fourteen-second demo: spikestudiodxb.com running on a MacBook and on an iPhone 15 Pro at the same time, both scrolling, smooth scroll and reveals playing on both, the phone passing phonefix"><source src="assets/demo-portrait.mp4?v=9" type="video/mp4" media="(max-width: 700px)"><source src="assets/demo.mp4?v=9" type="video/mp4"></video>
+      <script>(function(){var v=document.currentScript.previousElementSibling,mq=matchMedia("(max-width: 700px)"),cur=null;function pick(){var p=mq.matches;if(cur===p)return;cur=p;var s=v.querySelector(p?"source[media]":"source:not([media])");v.style.aspectRatio=p?"4 / 5":"16 / 9";v.poster=p?"assets/demo-portrait-poster.jpg?v=9":"assets/demo-poster.jpg?v=9";v.src=s.getAttribute("src");v.load();v.play&&v.play().catch(function(){});}pick();mq.addEventListener("change",pick);})();</script></div>
       <div class="phones" id="phones" hidden>
         <div class="phone">
           <div class="frame" id="frame-before"><img src="assets/before-iphone-se.jpg" width="750" height="1334" alt="Laptop-only page on iPhone SE: navigation clipped, 3D canvas pushed off-screen, empty hero" loading="lazy" decoding="async"></div>
@@ -336,6 +336,8 @@ git clone https://github.com/kp6801-ai/phonefix ~/.claude/skills/phonefix</code>
     const mk = (src) => { const f = document.createElement('iframe'); f.src = src; f.title = 'live demo'; f.loading = 'lazy'; return f; };
     document.getElementById('frame-before').replaceChildren(mk('examples/laptop-only/'));
     document.getElementById('frame-after').replaceChildren(mk('examples/fixed/'));
+    const fit = () => document.querySelectorAll('#phones .frame').forEach(fr => { const f = fr.querySelector('iframe'); if (f) f.style.transform = 'scale(' + (fr.clientWidth / 375) + ')'; });
+    fit(); addEventListener('resize', fit);
     e.currentTarget.textContent = 'Live · scroll inside each phone'; e.currentTarget.disabled = true;
   });
 </script>
